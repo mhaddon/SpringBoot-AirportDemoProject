@@ -1,0 +1,10 @@
+language: java
+jdk:
+  - oraclejdk8
+  - openjdk8
+dist: trusty
+script:
+  - mvn test -Dgroups="com.airportdemo.testcategory.Fast,com.airportdemo.testcategory.Slow"
+cache:
+  directories:
+    - $HOME/.m2
