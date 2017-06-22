@@ -182,6 +182,11 @@ public class DatabaseConfig {
         properties.put("hibernate.hbm2ddl.auto", hibernateHbm2DdlAuto);
         properties.put("hibernate.connection.driver_class", dbDriver);
 
+        properties.put("hibernate.cache.region.factory_class", "org.hibernate.cache.ehcache.EhCacheRegionFactory");
+        properties.put("hibernate.cache.use_second_level_cache", "true");
+        properties.put("hibernate.cache.use_query_cache", "true");
+
+
         properties.put("hibernate.search.default.directory_provider", "filesystem");
         properties.put("hibernate.search.default.indexBase", "./lucene_indexes/");
 

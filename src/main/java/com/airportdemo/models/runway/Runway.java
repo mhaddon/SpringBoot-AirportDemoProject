@@ -22,6 +22,7 @@ import com.airportdemo.models.core.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.IndexedEmbedded;
@@ -33,6 +34,7 @@ import java.util.Optional;
 @Entity
 @Table(name = "runways")
 @Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Indexed
 @Data
 @EqualsAndHashCode(callSuper = true)

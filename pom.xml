@@ -50,7 +50,9 @@
 
     <scm>
         <connection>scm:git:git://github.com/mhaddon/SpringBoot-AirportDemoProject.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/mhaddon/SpringBoot-AirportDemoProject.git</developerConnection>
+        <developerConnection>
+            scm:git:ssh://git@github.com/mhaddon/SpringBoot-AirportDemoProject.git
+        </developerConnection>
         <url>https://github.com/mhaddon/SpringBoot-AirportDemoProject</url>
         <tag>HEAD</tag>
     </scm>
@@ -79,6 +81,7 @@
         <hibernate.search.version>5.7.1.Final</hibernate.search.version>
         <slf4j.version>1.7.25</slf4j.version>
         <apache.commons.version>3.6</apache.commons.version>
+        <ehcache.version>3.3.0</ehcache.version>
     </properties>
 
     <dependencies>
@@ -110,6 +113,11 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+
         <!-- Hibernate -->
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -128,6 +136,18 @@
             <artifactId>hibernate-search-orm</artifactId>
             <version>${hibernate.search.version}</version>
         </dependency>
+
+        <!-- Caching -->
+        <dependency>
+            <groupId>net.sf.ehcache</groupId>
+            <artifactId>ehcache</artifactId>
+            <version>2.10.4</version>
+        </dependency>
+        <!--<dependency>-->
+        <!--<groupId>org.ehcache</groupId>-->
+        <!--<artifactId>ehcache</artifactId>-->
+        <!--<version>${ehcache.version}</version>-->
+        <!--</dependency>-->
 
         <!-- Logging -->
         <dependency>
@@ -168,6 +188,19 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <repositories>
+        <repository>
+            <id>terracotta-releases</id>
+            <url>http://www.terracotta.org/download/reflector/releases</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 
     <build>
         <plugins>

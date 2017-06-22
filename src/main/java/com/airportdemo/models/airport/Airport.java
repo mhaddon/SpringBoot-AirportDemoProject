@@ -23,6 +23,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.search.annotations.*;
 
 import javax.persistence.*;
@@ -34,6 +35,7 @@ import java.util.Set;
 @Entity
 @Table(name = "airports")
 @Cacheable
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Indexed
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -116,6 +118,7 @@ public class Airport extends BaseEntity implements Serializable {
     @ContainedIn
     //    @Field(bridge = @FieldBridge(impl = RunwayBridge.class),
     //            analyzer = @Analyzer(definition = SearchAnalysers.ENGLISH_WORD_ANALYSER))
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Runway> runways = new HashSet<>(0);
 
     @Builder
