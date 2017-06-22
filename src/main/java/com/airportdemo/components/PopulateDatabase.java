@@ -20,7 +20,7 @@ package com.airportdemo.components;
 import com.airportdemo.models.airport.AirportCSVParser;
 import com.airportdemo.models.country.CountryCSVParser;
 import com.airportdemo.models.runway.RunwayCSVParser;
-import com.airportdemo.modules.ChunkIterator;
+import com.airportdemo.modules.ChunkIteratorAsync;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -78,11 +78,18 @@ public class PopulateDatabase implements ApplicationListener<ApplicationReadyEve
     @Override
     public final void onApplicationEvent(final ApplicationReadyEvent event) {
         final Date timeStarted = Calendar.getInstance().getTime();
+        logger.info("[PopulateDatabase] Populating database, this may take a minute.");
+        logger.info("[PopulateDatabase] Importing Countries...");
         readFileRecords(countryCsv, countryCSVParser::parseAll);
+        logger.info("[PopulateDatabase] Imported Countries");
+        logger.info("[PopulateDatabase] Importing Airports...");
         readFileRecords(airportCsv, airportCSVParser::parseAll);
+        logger.info("[PopulateDatabase] Imported Airports");
+        logger.info("[PopulateDatabase] Importing Runways...");
         readFileRecords(runwayCsv, runwayCSVParser::parseAll);
+        logger.info("[PopulateDatabase] Imported Runways");
         final Date timeEnded = Calendar.getInstance().getTime();
-        logger.info("Populating database took {}ms", timeEnded.getTime() - timeStarted.getTime());
+        logger.info("[PopulateDatabase] Populating database took {}ms", timeEnded.getTime() - timeStarted.getTime());
     }
 
 
@@ -90,8 +97,8 @@ public class PopulateDatabase implements ApplicationListener<ApplicationReadyEve
         try {
             final Reader reader = new InputStreamReader(fileResource.getInputStream(), "UTF-8");
             final CSVParser parser = new CSVParser(reader, CSVFormat.DEFAULT.withHeader());
-            ChunkIterator.of(parser)
-                    .setSize(500)
+            ChunkIteratorAsync.of(parser)
+                    .setSize(1000)
                     .iterate(consumer);
         } catch (final IOException e) {
             logger.warn("[PopulateDatabase] [readFileRecords] Failure to read csv records", e);

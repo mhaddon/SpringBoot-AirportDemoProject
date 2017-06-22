@@ -18,17 +18,21 @@ package com.airportdemo.components.CSVParser;
 
 import com.airportdemo.models.core.BaseEntity;
 import com.airportdemo.modules.CSVEntity;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.csv.CSVRecord;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 abstract public class CSVParser<T extends BaseEntity> implements CSVParserStrategy {
     final public void parse(final CSVRecord record) {
-        if (checkValidity(record)) {
+        if (record != null && checkValidity(record)) {
             Optional.ofNullable(process(CSVEntity.of(record)))
                     .ifPresent(this::save);
+        } else {
+            logger.error("error reading {}", record);
         }
     }
 

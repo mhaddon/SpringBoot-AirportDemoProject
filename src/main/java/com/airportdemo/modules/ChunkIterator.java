@@ -22,31 +22,81 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+/**
+ * The class provides an abstraction over iterables so you can process their iterations in chunks.
+ * For example if you do:
+ * <p>
+ * ChunkIterator.of(Iterable)
+ * .setSize(1000)
+ * .iterate(Consumer);
+ * <p>
+ * That will process an iterable in chunks of 1000, the consumer being sent the list of iterations.
+ * The purpose of chunking like this is to try to reduce overhead when you do operations individually.
+ * For example, opening/closing a mysql connection. This is unnecessary overhead when you are dealing with thousands
+ * of elements.
+ */
 @Data
-final public class ChunkIterator<T extends Iterable<U>, U extends Iterable> {
-    static public <T extends Iterable<U>, U extends Iterable> ChunkIterator<T, U> of(final T iterable) {
+public class ChunkIterator<T extends Iterable<U>, U> {
+    /**
+     * Simple factory method
+     *
+     * @param iterable What are we iterating over
+     * @param <T>      The type of what we are iterating over, like List
+     * @param <U>      The type of the contents of what we are iterating over, like String
+     * @return ChunkIterator
+     */
+    static public <T extends Iterable<U>, U> ChunkIterator<T, U> of(final T iterable) {
         return new ChunkIterator<>(iterable);
     }
 
+    /**
+     * The current cache of chunk elements that we are processing
+     */
+    final private List<U> chunk = new ArrayList<>();
+
+    /**
+     * The iterable that we are iterating over
+     */
     final private T iterable;
+
+    /**
+     * The maximum size of the chunk
+     */
     private int size = 100;
 
-    private ChunkIterator(final T iterable) {
+    /**
+     * @param iterable What are we iterating over
+     */
+    protected ChunkIterator(final T iterable) {
         this.iterable = iterable;
     }
 
-    final public void iterate(final Consumer<List<U>> consumer) {
-        final List<U> chunk = new ArrayList<>();
+    /**
+     * @param consumer
+     */
+    public void iterate(final Consumer<List<U>> consumer) {
+        for (final U iteration : getIterable()) {
+            getChunk().add(iteration);
 
-        for (final U iteration : iterable) {
-            chunk.add(iteration);
-
-            if (chunk.size() >= size) {
-                consumer.accept(chunk);
-                chunk.clear();
+            if (ifChunkIsFull()) {
+                processChunk(consumer);
             }
         }
-        consumer.accept(chunk);
-        chunk.clear();
+
+        processChunk(consumer);
+    }
+
+    protected boolean ifChunkIsFull() {
+        return getChunk().size() >= getSize();
+    }
+
+    /**
+     * Processes the chunk and resets the chunk cache
+     *
+     * @param consumer
+     */
+    protected void processChunk(final Consumer<List<U>> consumer) {
+        consumer.accept(getChunk());
+        getChunk().clear();
     }
 }
