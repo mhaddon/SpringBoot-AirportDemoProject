@@ -20,6 +20,7 @@ package com.airportdemo.components;
 import com.airportdemo.models.airport.AirportCSVParser;
 import com.airportdemo.models.country.CountryCSVParser;
 import com.airportdemo.models.runway.RunwayCSVParser;
+import com.airportdemo.modules.ChunkIterator;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -32,7 +33,10 @@ import org.springframework.core.Ordered;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.util.*;
 import java.util.function.Consumer;
 
 /**
@@ -55,7 +59,7 @@ public class PopulateDatabase implements ApplicationListener<ApplicationReadyEve
                             final RunwayCSVParser runwayCSVParser,
                             @Value(value = "classpath:static/countries.csv") final Resource countryCsv,
                             @Value(value = "classpath:static/airports.csv") final Resource airportCsv,
-                            @Value(value = "classpath:static/runway.csv") final Resource runwayCsv) {
+                            @Value(value = "classpath:static/runways.csv") final Resource runwayCsv) {
         this.countryCSVParser = countryCSVParser;
         this.airportCSVParser = airportCSVParser;
         this.runwayCSVParser = runwayCSVParser;
@@ -71,28 +75,25 @@ public class PopulateDatabase implements ApplicationListener<ApplicationReadyEve
      */
     @Override
     public final void onApplicationEvent(final ApplicationReadyEvent event) {
-        readFileRecords(countryCsv, countryCSVParser::parse);
-        readFileRecords(airportCsv, airportCSVParser::parse);
-        readFileRecords(runwayCsv, runwayCSVParser::parse);
+        final Date timeStarted = Calendar.getInstance().getTime();
+        readFileRecords(countryCsv, countryCSVParser::parseAll);
+        readFileRecords(airportCsv, airportCSVParser::parseAll);
+        readFileRecords(runwayCsv, runwayCSVParser::parseAll);
+        final Date timeEnded = Calendar.getInstance().getTime();
+        logger.info("Populating database took {}ms", timeEnded.getTime() - timeStarted.getTime());
     }
 
-    /**
-     *
-     * @param fileResource
-     * @param consumer
-     */
-    private void readFileRecords(final Resource fileResource, final Consumer<CSVRecord> consumer) {
+
+    private void readFileRecords(final Resource fileResource, final Consumer<List<CSVRecord>> consumer) {
         try {
             final Reader reader = new InputStreamReader(fileResource.getInputStream(), "UTF-8");
             final CSVParser parser = new CSVParser(reader, CSVFormat.DEFAULT.withHeader());
-
-            for (final CSVRecord csvRecord : parser) {
-                consumer.accept(csvRecord);
-            }
+            ChunkIterator.of(parser)
+                    .setSize(500)
+                    .iterate(consumer);
         } catch (final IOException e) {
             logger.warn("[PopulateDatabase] [readFileRecords] Failure to read csv records", e);
         }
-
     }
 
     @Override

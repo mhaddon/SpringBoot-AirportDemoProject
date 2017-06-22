@@ -23,6 +23,7 @@ import com.airportdemo.modules.CSVEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -64,7 +65,7 @@ public class AirportCSVParser extends CSVParser<Airport> {
 
     @Override
     protected void save(final Airport item) {
-        airportRepository.saveAndFlush(item);
+        airportRepository.save(item);
     }
 
     private Optional<Country> findCountry(final String countryIsoCode) {

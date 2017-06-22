@@ -22,6 +22,8 @@ import org.apache.commons.csv.CSVRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class CountryCSVParser extends CSVParser<Country> {
     private final CountryRepository countryRepository;
@@ -45,6 +47,6 @@ public class CountryCSVParser extends CSVParser<Country> {
 
     @Override
     protected void save(final Country item) {
-        countryRepository.saveAndFlush(item);
+        countryRepository.save(item);
     }
 }

@@ -24,6 +24,7 @@ import org.apache.commons.csv.CSVRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -67,7 +68,7 @@ public class RunwayCSVParser extends CSVParser<Runway> {
 
     @Override
     protected void save(final Runway item) {
-        runwayRepository.saveAndFlush(item);
+        runwayRepository.save(item);
     }
 
     private Optional<Airport> findAirport(final Long referenceId) {
