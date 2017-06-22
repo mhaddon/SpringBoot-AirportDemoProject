@@ -16,9 +16,21 @@
 
 package com.airportdemo.models.core;
 
+import com.airportdemo.modules.SearchAnalysers;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import org.apache.lucene.analysis.charfilter.HTMLStripCharFilterFactory;
+import org.apache.lucene.analysis.charfilter.MappingCharFilterFactory;
+import org.apache.lucene.analysis.core.LowerCaseFilterFactory;
+import org.apache.lucene.analysis.core.StopFilterFactory;
+import org.apache.lucene.analysis.miscellaneous.ASCIIFoldingFilterFactory;
+import org.apache.lucene.analysis.phonetic.PhoneticFilterFactory;
+import org.apache.lucene.analysis.snowball.SnowballPorterFilterFactory;
+import org.apache.lucene.analysis.standard.StandardFilterFactory;
+import org.apache.lucene.analysis.standard.StandardTokenizerFactory;
+import org.apache.lucene.analysis.synonym.SynonymFilterFactory;
+import org.hibernate.search.annotations.*;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
@@ -29,27 +41,28 @@ import java.util.Optional;
 @MappedSuperclass
 @Data
 @EqualsAndHashCode(callSuper = false)
-//@AnalyzerDef(name = SearchAnalysers.ENGLISH_WORD_ANALYSER,
-//        tokenizer = @TokenizerDef(factory = StandardTokenizerFactory.class),
-//        filters = {
-//                @TokenFilterDef(factory = StandardFilterFactory.class),
-//                @TokenFilterDef(factory = LowerCaseFilterFactory.class),
-//                @TokenFilterDef(factory = SnowballPorterFilterFactory.class, params = {
-//                        @org.hibernate.search.annotations.Parameter(name = "language", value = "English")
-//                }),
-//                @TokenFilterDef(factory = SynonymFilterFactory.class, params = {
-//                        @org.hibernate.search.annotations.Parameter(name = "ignoreCase", value = "true"),
-//                        @org.hibernate.search.annotations.Parameter(name = "synonyms", value = "properties/analyser/synonyms.properties")
-//                }),
-//                @TokenFilterDef(factory = ASCIIFoldingFilterFactory.class),
-//                @TokenFilterDef(factory = PhoneticFilterFactory.class, params = {
-//                        @org.hibernate.search.annotations.Parameter(name = "encoder", value = "DoubleMetaphone")
-//                }),
-//                @TokenFilterDef(factory = StopFilterFactory.class, params = {
-//                        @org.hibernate.search.annotations.Parameter(name = "words", value = "properties/analyser/stoplist.properties"),
-//                        @org.hibernate.search.annotations.Parameter(name = "ignoreCase", value = "true")
-//                })
-//        })
+@AnalyzerDef(name = SearchAnalysers.ENGLISH_WORD_ANALYSER,
+        charFilters = {
+                @CharFilterDef(factory = MappingCharFilterFactory.class, params = {
+                        @Parameter(name = "mapping", value = "analyser/mapping-chars.properties")
+                })
+        },
+        tokenizer = @TokenizerDef(factory = StandardTokenizerFactory.class),
+        filters = {
+                @TokenFilterDef(factory = StandardFilterFactory.class),
+                @TokenFilterDef(factory = LowerCaseFilterFactory.class),
+                @TokenFilterDef(factory = SnowballPorterFilterFactory.class, params = {
+                        @org.hibernate.search.annotations.Parameter(name = "language", value = "English")
+                }),
+                @TokenFilterDef(factory = ASCIIFoldingFilterFactory.class),
+                @TokenFilterDef(factory = PhoneticFilterFactory.class, params = {
+                        @org.hibernate.search.annotations.Parameter(name = "encoder", value = "DoubleMetaphone")
+                }),
+                @TokenFilterDef(factory = StopFilterFactory.class, params = {
+                        @org.hibernate.search.annotations.Parameter(name = "words", value = "analyser/stoplist.properties"),
+                        @org.hibernate.search.annotations.Parameter(name = "ignoreCase", value = "true")
+                })
+        })
 public abstract class BaseEntity implements Serializable {
     /**
      * The ID of this entity
