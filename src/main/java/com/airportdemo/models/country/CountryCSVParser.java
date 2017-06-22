@@ -18,7 +18,6 @@ package com.airportdemo.models.country;
 
 import com.airportdemo.components.CSVParser.CSVParser;
 import com.airportdemo.modules.CSVEntity;
-import org.apache.commons.csv.CSVRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -48,5 +47,10 @@ public class CountryCSVParser extends CSVParser<Country> {
     @Override
     protected void save(final Country item) {
         countryRepository.save(item);
+    }
+
+    @Override
+    protected void save(final List<Country> items) {
+        countryRepository.save(items);
     }
 }

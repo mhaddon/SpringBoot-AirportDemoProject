@@ -114,8 +114,8 @@ public class Airport extends BaseEntity implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "airport")
     @JsonBackReference(value = "runwayToAirport")
     @ContainedIn
-//    @Field(bridge = @FieldBridge(impl = RunwayBridge.class),
-//            analyzer = @Analyzer(definition = SearchAnalysers.ENGLISH_WORD_ANALYSER))
+    //    @Field(bridge = @FieldBridge(impl = RunwayBridge.class),
+    //            analyzer = @Analyzer(definition = SearchAnalysers.ENGLISH_WORD_ANALYSER))
     private Set<Runway> runways = new HashSet<>(0);
 
     @Builder

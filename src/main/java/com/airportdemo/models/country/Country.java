@@ -20,7 +20,9 @@ import com.airportdemo.models.airport.Airport;
 import com.airportdemo.models.core.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
-import org.hibernate.search.annotations.*;
+import org.hibernate.search.annotations.ContainedIn;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -59,8 +61,8 @@ public class Country extends BaseEntity implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "country")
     @JsonBackReference(value = "airportToCountry")
     @ContainedIn
-//    @Field(bridge = @FieldBridge(impl = CountryBridge.class),
-//            analyzer = @Analyzer(definition = SearchAnalysers.ENGLISH_WORD_ANALYSER))
+    //    @Field(bridge = @FieldBridge(impl = CountryBridge.class),
+    //            analyzer = @Analyzer(definition = SearchAnalysers.ENGLISH_WORD_ANALYSER))
     private Set<Airport> airports = new HashSet<>(0);
 
     @Builder

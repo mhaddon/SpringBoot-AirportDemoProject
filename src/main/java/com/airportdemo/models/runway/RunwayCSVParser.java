@@ -20,7 +20,6 @@ import com.airportdemo.components.CSVParser.CSVParser;
 import com.airportdemo.models.airport.Airport;
 import com.airportdemo.models.airport.AirportRepository;
 import com.airportdemo.modules.CSVEntity;
-import org.apache.commons.csv.CSVRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -69,6 +68,11 @@ public class RunwayCSVParser extends CSVParser<Runway> {
     @Override
     protected void save(final Runway item) {
         runwayRepository.save(item);
+    }
+
+    @Override
+    protected void save(final List<Runway> items) {
+        runwayRepository.save(items);
     }
 
     private Optional<Airport> findAirport(final Long referenceId) {

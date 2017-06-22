@@ -34,19 +34,19 @@ public class CSVEntity {
         this.record = record;
     }
 
-    public String get(final String key) {
-        return record.get(key);
+    public Double getDouble(final String key) {
+        return getOptional(key)
+                .filter(NumberUtils::isCreatable)
+                .map(Double::parseDouble)
+                .orElse(null);
     }
 
     public Optional<String> getOptional(final String key) {
         return Optional.ofNullable(get(key));
     }
 
-    public Double getDouble(final String key) {
-        return getOptional(key)
-                .filter(NumberUtils::isCreatable)
-                .map(Double::parseDouble)
-                .orElse(null);
+    public String get(final String key) {
+        return record.get(key);
     }
 
     public Integer getInt(final String key) {

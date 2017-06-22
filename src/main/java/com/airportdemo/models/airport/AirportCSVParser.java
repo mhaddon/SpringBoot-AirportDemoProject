@@ -68,6 +68,11 @@ public class AirportCSVParser extends CSVParser<Airport> {
         airportRepository.save(item);
     }
 
+    @Override
+    protected void save(final List<Airport> items) {
+        airportRepository.save(items);
+    }
+
     private Optional<Country> findCountry(final String countryIsoCode) {
         return countryRepository.findOneByCode(countryIsoCode);
     }

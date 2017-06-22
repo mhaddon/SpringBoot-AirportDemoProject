@@ -20,7 +20,6 @@ import com.airportdemo.models.core.BaseEntity;
 import com.airportdemo.modules.CSVEntity;
 import org.apache.commons.csv.CSVRecord;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -33,23 +32,24 @@ abstract public class CSVParser<T extends BaseEntity> implements CSVParserStrate
         }
     }
 
-    final public void parseAll(final List<CSVRecord> records) {
-        records.stream()
-                .filter(this::checkValidity)
-                .map(this::process)
-                .collect(Collectors.toList())
-                .forEach(this::save);
-    }
-
     private Boolean checkValidity(final CSVRecord record) {
         return record.isConsistent();
     }
 
+    abstract public T process(final CSVEntity record);
+
+    final public void parseAll(final List<CSVRecord> records) {
+        save(records.stream()
+                .filter(this::checkValidity)
+                .map(this::process)
+                .collect(Collectors.toList()));
+    }
+
+    abstract protected void save(final List<T> item);
+
     private T process(final CSVRecord record) {
         return process(CSVEntity.of(record));
     }
-
-    abstract public T process(final CSVEntity record);
 
     abstract protected void save(final T item);
 }
