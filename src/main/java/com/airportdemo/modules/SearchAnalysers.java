@@ -25,6 +25,10 @@ public final class SearchAnalysers {
      */
     public static final String ENGLISH_WORD_ANALYSER = "EnglishWordAnalyser";
 
+    public static final String NGRAM_ANALYSER = "autocompleteNGramAnalyzer";
+
+    public static final String EDGE_ANALYSER = "autocompleteEdgeAnalyzer";
+
     private SearchAnalysers() {
         throw new IllegalAccessError("Enum");
     }

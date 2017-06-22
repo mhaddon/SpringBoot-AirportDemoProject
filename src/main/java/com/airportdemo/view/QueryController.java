@@ -17,17 +17,16 @@
 package com.airportdemo.view;
 
 import com.airportdemo.models.country.Country;
-import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
+import com.airportdemo.modules.SearchAnalysers;
 import org.apache.lucene.queryparser.classic.ParseException;
-import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.Query;
 import org.hibernate.search.SearchFactory;
-import org.hibernate.search.engine.ProjectionConstants;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.FullTextQuery;
 import org.hibernate.search.jpa.Search;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.hibernate.search.query.dsl.QueryBuilder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -44,19 +43,46 @@ public class QueryController {
 
     @RequestMapping("/query/{query}")
     @ResponseBody
-    public List queryCountry(@PathVariable("query") final String queryString) throws ParseException {
+    @Transactional(readOnly = true)
+    public synchronized List queryCountry(@PathVariable("query") final String queryString) throws ParseException {
         final FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
         final SearchFactory searchFactory = fullTextEntityManager.getSearchFactory();
 
-        final QueryParser parser = new MultiFieldQueryParser(
-                new String[]{"code", "name"},
-                searchFactory.getAnalyzer(Country.class)
-        );
+        final QueryBuilder titleQB = searchFactory
+                .buildQueryBuilder().forEntity(Country.class).get();
 
-        final Query query = parser.parse(queryString);
-        final FullTextQuery jpaQuery = fullTextEntityManager.createFullTextQuery(query, Country.class);
-        jpaQuery.setProjection(ProjectionConstants.SCORE, ProjectionConstants.EXPLANATION, ProjectionConstants.THIS);
+        Query query = titleQB.phrase()
+                .withSlop(3)
+//                .onField(SearchAnalysers.NGRAM_ANALYSER)
+//                .andField(SearchAnalysers.EDGE_ANALYSER)
+                .onField("code")
+                .andField("code.ngram")
+                .andField("code.edge")
+                .andField("name")
+                .andField("name.ngram")
+                .andField("name.edge")
+                .sentence(queryString.toLowerCase())
+                .createQuery();
 
-        return (List<Object[]>) jpaQuery.getResultList();
+        FullTextQuery fullTextQuery = fullTextEntityManager.createFullTextQuery(query, Country.class);
+
+        fullTextQuery.setMaxResults(20);
+
+        @SuppressWarnings("unchecked")
+        List<Country> results = fullTextQuery.getResultList();
+
+        return results;
+
+        //
+        //        final QueryParser parser = new MultiFieldQueryParser(
+        //                new String[]{"code", "name"},
+        //                searchFactory.getAnalyzer(SearchAnalysers.ENGLISH_WORD_ANALYSER)
+        //        );
+        //
+        //        final Query query = parser.parse(queryString);
+        //        final FullTextQuery jpaQuery = fullTextEntityManager.createFullTextQuery(query, Country.class);
+        ////        jpaQuery.setProjection(ProjectionConstants.SCORE, ProjectionConstants.EXPLANATION, ProjectionConstants.THIS);
+        //
+        //        return (List<Object[]>) jpaQuery.getResultList();
     }
 }

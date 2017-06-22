@@ -20,16 +20,19 @@ import com.airportdemo.modules.SearchAnalysers;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import org.apache.lucene.analysis.charfilter.HTMLStripCharFilterFactory;
 import org.apache.lucene.analysis.charfilter.MappingCharFilterFactory;
+import org.apache.lucene.analysis.core.KeywordTokenizerFactory;
 import org.apache.lucene.analysis.core.LowerCaseFilterFactory;
 import org.apache.lucene.analysis.core.StopFilterFactory;
 import org.apache.lucene.analysis.miscellaneous.ASCIIFoldingFilterFactory;
+import org.apache.lucene.analysis.miscellaneous.WordDelimiterFilterFactory;
+import org.apache.lucene.analysis.ngram.EdgeNGramFilterFactory;
+import org.apache.lucene.analysis.ngram.NGramFilterFactory;
+import org.apache.lucene.analysis.pattern.PatternReplaceFilterFactory;
 import org.apache.lucene.analysis.phonetic.PhoneticFilterFactory;
 import org.apache.lucene.analysis.snowball.SnowballPorterFilterFactory;
 import org.apache.lucene.analysis.standard.StandardFilterFactory;
 import org.apache.lucene.analysis.standard.StandardTokenizerFactory;
-import org.apache.lucene.analysis.synonym.SynonymFilterFactory;
 import org.hibernate.search.annotations.*;
 
 import javax.persistence.Column;
@@ -41,28 +44,66 @@ import java.util.Optional;
 @MappedSuperclass
 @Data
 @EqualsAndHashCode(callSuper = false)
-@AnalyzerDef(name = SearchAnalysers.ENGLISH_WORD_ANALYSER,
-        charFilters = {
-                @CharFilterDef(factory = MappingCharFilterFactory.class, params = {
-                        @Parameter(name = "mapping", value = "analyser/mapping-chars.properties")
-                })
-        },
-        tokenizer = @TokenizerDef(factory = StandardTokenizerFactory.class),
-        filters = {
-                @TokenFilterDef(factory = StandardFilterFactory.class),
-                @TokenFilterDef(factory = LowerCaseFilterFactory.class),
-                @TokenFilterDef(factory = SnowballPorterFilterFactory.class, params = {
-                        @org.hibernate.search.annotations.Parameter(name = "language", value = "English")
+@AnalyzerDefs({
+        @AnalyzerDef(name = SearchAnalysers.EDGE_ANALYSER,
+                // Split input into tokens according to tokenizer
+                tokenizer = @TokenizerDef(factory = KeywordTokenizerFactory.class),
+
+                filters = {
+                        // Normalize token text to lowercase, as the user is unlikely to
+                        // care about casing when searching for matches
+                        @TokenFilterDef(factory = PatternReplaceFilterFactory.class, params = {
+                                @Parameter(name = "pattern", value = "([^a-zA-Z0-9\\.])"),
+                                @Parameter(name = "replacement", value = " "),
+                                @Parameter(name = "replace", value = "all")}),
+                        @TokenFilterDef(factory = LowerCaseFilterFactory.class),
+                        @TokenFilterDef(factory = StopFilterFactory.class),
+                        // Index partial words starting at the front, so we can provide
+                        // Autocomplete functionality
+                        @TokenFilterDef(factory = EdgeNGramFilterFactory.class, params = {
+                                @Parameter(name = "minGramSize", value = "3"),
+                                @Parameter(name = "maxGramSize", value = "50")})}),
+
+        @AnalyzerDef(name = SearchAnalysers.NGRAM_ANALYSER,
+                // Split input into tokens according to tokenizer
+                tokenizer = @TokenizerDef(factory = StandardTokenizerFactory.class),
+
+                filters = {
+                        // Normalize token text to lowercase, as the user is unlikely to
+                        // care about casing when searching for matches
+                        @TokenFilterDef(factory = WordDelimiterFilterFactory.class),
+                        @TokenFilterDef(factory = LowerCaseFilterFactory.class),
+                        @TokenFilterDef(factory = NGramFilterFactory.class, params = {
+                                @Parameter(name = "minGramSize", value = "3"),
+                                @Parameter(name = "maxGramSize", value = "5")}),
+                        @TokenFilterDef(factory = PatternReplaceFilterFactory.class, params = {
+                                @Parameter(name = "pattern", value = "([^a-zA-Z0-9\\.])"),
+                                @Parameter(name = "replacement", value = " "),
+                                @Parameter(name = "replace", value = "all")})
                 }),
-                @TokenFilterDef(factory = ASCIIFoldingFilterFactory.class),
-                @TokenFilterDef(factory = PhoneticFilterFactory.class, params = {
-                        @org.hibernate.search.annotations.Parameter(name = "encoder", value = "DoubleMetaphone")
-                }),
-                @TokenFilterDef(factory = StopFilterFactory.class, params = {
-                        @org.hibernate.search.annotations.Parameter(name = "words", value = "analyser/stoplist.properties"),
-                        @org.hibernate.search.annotations.Parameter(name = "ignoreCase", value = "true")
+        @AnalyzerDef(name = SearchAnalysers.ENGLISH_WORD_ANALYSER,
+                charFilters = {
+                        @CharFilterDef(factory = MappingCharFilterFactory.class, params = {
+                                @Parameter(name = "mapping", value = "analyser/mapping-chars.properties")
+                        })
+                },
+                tokenizer = @TokenizerDef(factory = StandardTokenizerFactory.class),
+                filters = {
+                        @TokenFilterDef(factory = StandardFilterFactory.class),
+                        @TokenFilterDef(factory = LowerCaseFilterFactory.class),
+                        @TokenFilterDef(factory = SnowballPorterFilterFactory.class, params = {
+                                @org.hibernate.search.annotations.Parameter(name = "language", value = "English")
+                        }),
+                        @TokenFilterDef(factory = ASCIIFoldingFilterFactory.class),
+                        @TokenFilterDef(factory = PhoneticFilterFactory.class, params = {
+                                @org.hibernate.search.annotations.Parameter(name = "encoder", value = "DoubleMetaphone")
+                        }),
+                        @TokenFilterDef(factory = StopFilterFactory.class, params = {
+                                @org.hibernate.search.annotations.Parameter(name = "words", value = "analyser/stoplist.properties"),
+                                @org.hibernate.search.annotations.Parameter(name = "ignoreCase", value = "true")
+                        })
                 })
-        })
+})
 public abstract class BaseEntity implements Serializable {
     /**
      * The ID of this entity

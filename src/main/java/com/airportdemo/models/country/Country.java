@@ -18,12 +18,12 @@ package com.airportdemo.models.country;
 
 import com.airportdemo.models.airport.Airport;
 import com.airportdemo.models.core.BaseEntity;
+import com.airportdemo.modules.SearchAnalysers;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.search.annotations.ContainedIn;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.*;
+import org.hibernate.search.annotations.Index;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -41,11 +41,25 @@ import java.util.Set;
 @NoArgsConstructor(force = true)
 public class Country extends BaseEntity implements Serializable {
     @Column(name = "code")
-    @Field
+    @Fields({
+            @Field(name = "name", index = Index.YES, store = Store.YES,
+                    analyze = Analyze.YES, analyzer = @Analyzer(definition = SearchAnalysers.ENGLISH_WORD_ANALYSER), boost = @Boost(3.0f)),
+            @Field(name = "name.edge", index = Index.YES, store = Store.NO,
+                    analyze = Analyze.YES, analyzer = @Analyzer(definition = SearchAnalysers.EDGE_ANALYSER)),
+            @Field(name = "name.ngram", index = Index.YES, store = Store.NO,
+                    analyze = Analyze.YES, analyzer = @Analyzer(definition = SearchAnalysers.NGRAM_ANALYSER))
+    })
     private String code;
 
     @Column(name = "name")
-    @Field
+    @Fields({
+            @Field(name = "name", index = Index.YES, store = Store.YES,
+                    analyze = Analyze.YES, analyzer = @Analyzer(definition = SearchAnalysers.ENGLISH_WORD_ANALYSER), boost = @Boost(3.0f)),
+            @Field(name = "name.edge", index = Index.YES, store = Store.NO,
+                    analyze = Analyze.YES, analyzer = @Analyzer(definition = SearchAnalysers.EDGE_ANALYSER)),
+            @Field(name = "name.ngram", index = Index.YES, store = Store.NO,
+                    analyze = Analyze.YES, analyzer = @Analyzer(definition = SearchAnalysers.NGRAM_ANALYSER))
+    })
     private String name;
 
     @Column(name = "continent")
