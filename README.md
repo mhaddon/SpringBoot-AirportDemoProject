@@ -34,7 +34,7 @@ The project was proposed to me during the process of looking for employment at "
 #### License
 This project has been released as FREE software for educational purposes.
 ```
-   SpringBoot-AirportDemoProject  Copyright (C) 2016-2017  Michael Haddon
+   SpringBoot-AirportDemoProject  Copyright (C) 2017  Michael Haddon
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU Affero General Public License version 3
