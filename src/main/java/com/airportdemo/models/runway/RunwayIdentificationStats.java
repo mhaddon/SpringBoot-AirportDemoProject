@@ -18,19 +18,18 @@ package com.airportdemo.models.runway;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.Optional;
 
 @Data
-public class SurfaceTypeStats {
-    private String surface;
+public class RunwayIdentificationStats {
+    private String identification;
     private Integer count;
 
     @Builder
-    private SurfaceTypeStats(final String surface,
-                             final Integer count) {
-        this.surface = Optional.ofNullable(surface).orElse("undefined");
+    private RunwayIdentificationStats(final String identification,
+                                     final Integer count) {
+        this.identification = Optional.ofNullable(identification).orElse("unknown");
         this.count = Optional.ofNullable(count).orElse(0);
     }
 }

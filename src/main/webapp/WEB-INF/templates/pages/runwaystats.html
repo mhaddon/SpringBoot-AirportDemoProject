@@ -19,23 +19,18 @@
       xmlns="http://www.w3.org/1999/xhtml"
       layout:decorator="include/layout">
 <head>
-    <title>Airport</title>
+    <title>Runway Identification Stats</title>
 </head>
 <body>
 <section th:fragment="content">
-    <h1>Hello, Welcome to my Airport demo application</h1>
-    <p>This application is a demonstration of my abilities to write Java back-end applications.</p>
-    <p>This application is not a demonstration of my abilities to write front-end applications. Better examples of that
-        are available on my Github profile.</p>
-    <p>There are many more features or improvements I would perform on this codebase if I had more time, I explain some of these on the Github page.</p>
-    <p>Please review this applications Github page at: <a
-            href="https://github.com/mhaddon/SpringBoot-AirportDemoProject" target="_blank">https://github.com/mhaddon/SpringBoot-AirportDemoProject</a>
-    </p>
-    <p>
-        <a href="/console" target="_blank">Log into the database here</a>
-        url: jdbc:h2:mem:airportdemodb, user: sa, no password
-    </p>
-    <p>Thankyou and have a nice day :)</p>
+    <h3>The top runway identifications!</h3>
+    <ul>
+        <li th:each="stat : ${statistics}">
+            <span th:text="${stat.identification}"></span>
+            &nbsp;--&nbsp;
+            <span th:text="${stat.count}"></span>
+        </li>
+    </ul>
 </section>
 </body>
 </html>

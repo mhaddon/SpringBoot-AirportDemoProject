@@ -16,21 +16,8 @@
 
 package com.airportdemo.models.runway;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.util.List;
 
-import java.util.Optional;
-
-@Data
-public class SurfaceTypeStats {
-    private String surface;
-    private Integer count;
-
-    @Builder
-    private SurfaceTypeStats(final String surface,
-                             final Integer count) {
-        this.surface = Optional.ofNullable(surface).orElse("undefined");
-        this.count = Optional.ofNullable(count).orElse(0);
-    }
+public interface RunwayService {
+    List<RunwayIdentificationStats> topRunwayIdentifications();
 }

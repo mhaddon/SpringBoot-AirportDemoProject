@@ -21,7 +21,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.NamedNativeQuery;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,13 +53,13 @@ public interface CountryRepository extends BaseRepository<Country> {
     List<Country> lowestCountriesInAirportCount();
 
     @Query(
-            value = "SELECT \"r\".\"surface\" as \"surface\", COUNT(\"r\".\"surface\") as \"count\" FROM \"airports\" as \"a\"\n" +
-                    "LEFT JOIN (\n" +
-                    "    SELECT \"runways\".\"airport_id\", \"runways\".\"surface\" FROM \"runways\" \n" +
-                    "    GROUP BY  \"runways\".\"surface\", \"runways\".\"airport_id\"\n" +
-                    ") as \"r\" ON \"a\".\"id\" = \"r\".\"airport_id\"\n" +
-                    "WHERE \"country_id\"=:country_id AND \"r\".\"surface\" IS NOT NULL\n" +
-                    "GROUP BY \"surface\"\n" +
+            value = "SELECT \"r\".\"surface\" as \"surface\", COUNT(\"r\".\"surface\") as \"count\" FROM \"airports\" as \"a\" " +
+                    "LEFT JOIN (" +
+                    "    SELECT \"runways\".\"airport_id\", \"runways\".\"surface\" FROM \"runways\" " +
+                    "    GROUP BY  \"runways\".\"surface\", \"runways\".\"airport_id\" " +
+                    ") as \"r\" ON \"a\".\"id\" = \"r\".\"airport_id\" " +
+                    "WHERE \"country_id\"=:country_id AND \"r\".\"surface\" IS NOT NULL " +
+                    "GROUP BY \"surface\" " +
                     "ORDER BY \"count\" DESC",
             nativeQuery = true
     )

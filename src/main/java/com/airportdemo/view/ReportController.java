@@ -17,6 +17,7 @@
 package com.airportdemo.view;
 
 import com.airportdemo.models.country.CountryService;
+import com.airportdemo.models.runway.RunwayService;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,13 +31,17 @@ public class ReportController {
 
     private final CountryService countryService;
 
+    private final RunwayService runwayService;
+
     @Autowired
-    public ReportController(final CountryService countryService) {
+    public ReportController(final CountryService countryService,
+                            final RunwayService runwayService) {
         this.countryService = countryService;
+        this.runwayService = runwayService;
     }
 
     @RequestMapping(value = "/report/airport", method = RequestMethod.GET)
-    public String queryCountry(final Model model) throws ParseException {
+    public String reportAirport(final Model model) throws ParseException {
         model.addAttribute("highestAirports", countryService.topCountriesInAirportCount());
         model.addAttribute("lowestAirports", countryService.lowestCountriesInAirportCount());
 
@@ -44,9 +49,16 @@ public class ReportController {
     }
 
     @RequestMapping(value = "/report/surface", method = RequestMethod.GET)
-    public String querySurface(final Model model) throws ParseException {
+    public String reportSurface(final Model model) throws ParseException {
         model.addAttribute("statistics", countryService.getAllSurfaceStatistics());
 
         return "pages/surfacestats";
+    }
+
+    @RequestMapping(value = "/report/runway", method = RequestMethod.GET)
+    public String reportRunways(final Model model) throws ParseException {
+        model.addAttribute("statistics", runwayService.topRunwayIdentifications());
+
+        return "pages/runwaystats";
     }
 }
