@@ -1,0 +1,93 @@
+/*
+ * SpringBoot-AirportDemoProject  Copyright (C) 2017  Michael Haddon
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License version 3
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+html, body {
+    margin: 0;
+    padding: 0;
+    background: #4e4e4e;
+    font-family: 'Lato', sans-serif;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+header a {
+    font-size: 20px;
+    font-weight: bold;
+    color: #f9f9f9;
+}
+
+header a:hover {
+    color: white;
+}
+
+section {
+    background: #f9f9f9;
+    margin: 0 20px;
+    padding: 12px 20px;
+    border-radius: 15px;
+}
+
+a {
+    text-decoration: none;
+}
+
+pre {
+    color: #ccc;
+    padding: 36px;
+}
+
+pre a {
+    color: #ccc;
+}
+
+pre a:hover {
+    color: #f9f9f9;
+}
+
+input {
+    padding: 5px;
+}
+
+.countrybox {
+    /*display: flex;*/
+}
+
+.countrybox__title {
+    display: flex;
+    align-items: center
+}
+
+.countrybox__title h1 {
+    margin-right: 15px;
+}
+
+.countrybox__airports {
+    display: flex;
+    margin: -15px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.airportbox {
+    margin: 15px;
+}
+

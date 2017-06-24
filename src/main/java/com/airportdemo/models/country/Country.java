@@ -37,16 +37,16 @@ import java.util.Set;
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Indexed
 @Data
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = {"airports"})
 @NoArgsConstructor(force = true)
 public class Country extends BaseEntity implements Serializable {
     @Column(name = "code")
     @Fields({
-            @Field(name = "name", index = Index.YES, store = Store.YES,
-                    analyze = Analyze.YES, analyzer = @Analyzer(definition = SearchAnalysers.ENGLISH_WORD_ANALYSER), boost = @Boost(3.0f)),
-            @Field(name = "name.edge", index = Index.YES, store = Store.NO,
+            @Field(name = "code", index = Index.YES, store = Store.YES,
+                    analyze = Analyze.YES, analyzer = @Analyzer(definition = SearchAnalysers.ENGLISH_WORD_ANALYSER), boost = @Boost(2.0f)),
+            @Field(name = "code.edge", index = Index.YES, store = Store.NO,
                     analyze = Analyze.YES, analyzer = @Analyzer(definition = SearchAnalysers.EDGE_ANALYSER)),
-            @Field(name = "name.ngram", index = Index.YES, store = Store.NO,
+            @Field(name = "code.ngram", index = Index.YES, store = Store.NO,
                     analyze = Analyze.YES, analyzer = @Analyzer(definition = SearchAnalysers.NGRAM_ANALYSER))
     })
     private String code;
@@ -54,7 +54,7 @@ public class Country extends BaseEntity implements Serializable {
     @Column(name = "name")
     @Fields({
             @Field(name = "name", index = Index.YES, store = Store.YES,
-                    analyze = Analyze.YES, analyzer = @Analyzer(definition = SearchAnalysers.ENGLISH_WORD_ANALYSER), boost = @Boost(3.0f)),
+                    analyze = Analyze.YES, analyzer = @Analyzer(definition = SearchAnalysers.ENGLISH_WORD_ANALYSER), boost = @Boost(2.0f)),
             @Field(name = "name.edge", index = Index.YES, store = Store.NO,
                     analyze = Analyze.YES, analyzer = @Analyzer(definition = SearchAnalysers.EDGE_ANALYSER)),
             @Field(name = "name.ngram", index = Index.YES, store = Store.NO,
@@ -77,8 +77,6 @@ public class Country extends BaseEntity implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "country")
     @JsonBackReference(value = "airportToCountry")
     @ContainedIn
-    //    @Field(bridge = @FieldBridge(impl = CountryBridge.class),
-    //            analyzer = @Analyzer(definition = SearchAnalysers.ENGLISH_WORD_ANALYSER))
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Airport> airports = new HashSet<>(0);
 

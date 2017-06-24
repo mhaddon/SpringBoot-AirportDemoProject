@@ -37,7 +37,7 @@ import java.util.Optional;
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Indexed
 @Data
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = {"airport"})
 @NoArgsConstructor(force = true)
 public class Runway extends BaseEntity implements Serializable {
 
@@ -47,10 +47,6 @@ public class Runway extends BaseEntity implements Serializable {
     @IndexedEmbedded
     @JsonProperty("airport")
     private Airport airport;
-
-    @Column(name = "airport_ident")
-    @Field
-    private String airportIdentity;
 
     @Column(name = "length_ft")
     @Field
@@ -123,7 +119,6 @@ public class Runway extends BaseEntity implements Serializable {
     @Builder
     private Runway(final Long id,
                    final Airport airport,
-                   final String airportIdentity,
                    final Integer lengthFeet,
                    final Integer widthFeet,
                    final String surface,
@@ -142,7 +137,6 @@ public class Runway extends BaseEntity implements Serializable {
                    final Double headingHe,
                    final Double displacedThresholdFeetHe) {
         super(id);
-        this.airportIdentity = airportIdentity;
         this.lengthFeet = lengthFeet;
         this.widthFeet = widthFeet;
         this.surface = surface;

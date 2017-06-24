@@ -17,72 +17,45 @@
 package com.airportdemo.view;
 
 import com.airportdemo.models.country.Country;
-import com.airportdemo.modules.SearchAnalysers;
+import com.airportdemo.models.country.CountryService;
 import org.apache.lucene.queryparser.classic.ParseException;
-import org.apache.lucene.search.Query;
-import org.hibernate.search.SearchFactory;
-import org.hibernate.search.jpa.FullTextEntityManager;
-import org.hibernate.search.jpa.FullTextQuery;
-import org.hibernate.search.jpa.Search;
-import org.hibernate.search.query.dsl.QueryBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class QueryController {
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    private final CountryService countryService;
 
-    @RequestMapping("/query/{query}")
-    @ResponseBody
-    @Transactional(readOnly = true)
-    public synchronized List queryCountry(@PathVariable("query") final String queryString) throws ParseException {
-        final FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
-        final SearchFactory searchFactory = fullTextEntityManager.getSearchFactory();
+    @Autowired
+    public QueryController(final CountryService countryService) {
+        this.countryService = countryService;
+    }
 
-        final QueryBuilder titleQB = searchFactory
-                .buildQueryBuilder().forEntity(Country.class).get();
+    @RequestMapping(value = "/query/", params = {"q"}, method = RequestMethod.GET)
+    public String queryCountryEmpty(@RequestParam("q") final String queryText,
+                                    final Model model) throws ParseException {
+        return queryCountry(queryText, model);
+    }
 
-        Query query = titleQB.phrase()
-                .withSlop(3)
-//                .onField(SearchAnalysers.NGRAM_ANALYSER)
-//                .andField(SearchAnalysers.EDGE_ANALYSER)
-                .onField("code")
-                .andField("code.ngram")
-                .andField("code.edge")
-                .andField("name")
-                .andField("name.ngram")
-                .andField("name.edge")
-                .sentence(queryString.toLowerCase())
-                .createQuery();
+    @RequestMapping(value = "/query/{query}", method = RequestMethod.GET)
+    public String queryCountry(@PathVariable("query") final String queryString, final Model model) throws ParseException {
+        final Optional<Country> countryOptional = countryService.queryCountry(queryString);
 
-        FullTextQuery fullTextQuery = fullTextEntityManager.createFullTextQuery(query, Country.class);
+        countryOptional.ifPresent(country -> {
+            model.addAttribute("country", country);
+            model.addAttribute("searchTerm", queryString);
+        });
 
-        fullTextQuery.setMaxResults(20);
+        return "pages/query";
+    }
 
-        @SuppressWarnings("unchecked")
-        List<Country> results = fullTextQuery.getResultList();
-
-        return results;
-
-        //
-        //        final QueryParser parser = new MultiFieldQueryParser(
-        //                new String[]{"code", "name"},
-        //                searchFactory.getAnalyzer(SearchAnalysers.ENGLISH_WORD_ANALYSER)
-        //        );
-        //
-        //        final Query query = parser.parse(queryString);
-        //        final FullTextQuery jpaQuery = fullTextEntityManager.createFullTextQuery(query, Country.class);
-        ////        jpaQuery.setProjection(ProjectionConstants.SCORE, ProjectionConstants.EXPLANATION, ProjectionConstants.THIS);
-        //
-        //        return (List<Object[]>) jpaQuery.getResultList();
+    @RequestMapping(value = "/query/", method = RequestMethod.GET)
+    public String queryCountryEmpty(final Model model) throws ParseException {
+        return queryCountry(" ", model);
     }
 }

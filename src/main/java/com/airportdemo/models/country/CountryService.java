@@ -14,18 +14,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.airportdemo;
+package com.airportdemo.models.country;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
+import java.util.Optional;
 
-@SpringBootApplication
-@EnableAutoConfiguration
-@ComponentScan("com.airportdemo")
-public class App {
-    public static void main(String[] args) {
-        SpringApplication.run(App.class, args);
-    }
+public interface CountryService {
+    Optional<Country> queryCountry(final String queryString);
 }

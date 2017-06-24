@@ -26,7 +26,7 @@ import java.util.function.Consumer;
 /**
  * This class is an Async version of ChunkIterator.
  * See parent class for more information.
- *
+ * <p>
  * Instead of processing all of the chunks sequentially this version will process each chunk async but it will
  * wait until all the chunks have finished being processed before it finishes processing.
  * This means that the use of the Async and non-async version are the same without any functional differences...
@@ -53,7 +53,6 @@ public class ChunkIteratorAsync<T extends Iterable<U>, U> extends ChunkIterator<
     }
 
     /**
-     *
      * @param consumer
      */
     @Override
@@ -72,7 +71,6 @@ public class ChunkIteratorAsync<T extends Iterable<U>, U> extends ChunkIterator<
     }
 
     /**
-     *
      * @param consumer
      * @param chunk
      * @return

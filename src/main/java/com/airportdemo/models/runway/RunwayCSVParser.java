@@ -43,7 +43,6 @@ public class RunwayCSVParser extends CSVParser<Runway> {
     public Runway process(final CSVEntity record) {
         return Runway.builder()
                 .airport(findAirport(record.getLong("airport_ref")).orElse(null))
-                .airportIdentity(record.get("airport_ident"))
                 .lengthFeet(record.getInt("length_ft"))
                 .widthFeet(record.getInt("width_ft"))
                 .surface(record.get("surface"))
@@ -66,13 +65,13 @@ public class RunwayCSVParser extends CSVParser<Runway> {
     }
 
     @Override
-    protected void save(final Runway item) {
-        runwayRepository.save(item);
+    protected void save(final List<Runway> items) {
+        runwayRepository.save(items);
     }
 
     @Override
-    protected void save(final List<Runway> items) {
-        runwayRepository.save(items);
+    protected void save(final Runway item) {
+        runwayRepository.save(item);
     }
 
     private Optional<Airport> findAirport(final Long referenceId) {

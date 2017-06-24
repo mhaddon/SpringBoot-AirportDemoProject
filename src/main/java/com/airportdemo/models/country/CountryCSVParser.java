@@ -45,12 +45,12 @@ public class CountryCSVParser extends CSVParser<Country> {
     }
 
     @Override
-    protected void save(final Country item) {
-        countryRepository.save(item);
+    protected void save(final List<Country> items) {
+        countryRepository.save(items);
     }
 
     @Override
-    protected void save(final List<Country> items) {
-        countryRepository.save(items);
+    protected void save(final Country item) {
+        countryRepository.save(item);
     }
 }

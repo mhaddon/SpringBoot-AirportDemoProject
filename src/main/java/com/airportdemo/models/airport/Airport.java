@@ -38,7 +38,7 @@ import java.util.Set;
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Indexed
 @Data
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = {"runways", "country"})
 @NoArgsConstructor(force = true)
 public class Airport extends BaseEntity implements Serializable {
 
@@ -116,8 +116,6 @@ public class Airport extends BaseEntity implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "airport")
     @JsonBackReference(value = "runwayToAirport")
     @ContainedIn
-    //    @Field(bridge = @FieldBridge(impl = RunwayBridge.class),
-    //            analyzer = @Analyzer(definition = SearchAnalysers.ENGLISH_WORD_ANALYSER))
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Runway> runways = new HashSet<>(0);
 
