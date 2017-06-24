@@ -14,17 +14,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.airportdemo.models.country;
+package com.airportdemo.models.runway;
 
-import com.airportdemo.models.runway.SurfaceTypeStats;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.List;
 import java.util.Optional;
 
-public interface CountryService {
-    Optional<Country> queryCountry(final String queryString);
-    List<Country> topCountriesInAirportCount();
-    List<Country> lowestCountriesInAirportCount();
-    List<SurfaceTypeStats> getSurfaceStatistics(final Country country);
-    List<CountrySurfaceTypeStats> getAllSurfaceStatistics();
+@Data
+@NoArgsConstructor(force = true)
+public class SurfaceTypeStats {
+    private String surface;
+    private Integer count;
+
+    @Builder
+    public SurfaceTypeStats(final String surface,
+                             final Integer count) {
+        this.surface = Optional.ofNullable(surface).orElse("undefined");
+        this.count = Optional.ofNullable(count).orElse(0);
+    }
 }

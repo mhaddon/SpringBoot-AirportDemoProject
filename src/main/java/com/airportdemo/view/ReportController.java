@@ -42,4 +42,11 @@ public class ReportController {
 
         return "pages/airportstats";
     }
+
+    @RequestMapping(value = "/report/surface", method = RequestMethod.GET)
+    public String querySurface(final Model model) throws ParseException {
+        model.addAttribute("statistics", countryService.getAllSurfaceStatistics());
+
+        return "pages/surfacestats";
+    }
 }

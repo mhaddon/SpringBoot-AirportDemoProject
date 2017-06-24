@@ -17,14 +17,22 @@
 package com.airportdemo.models.country;
 
 import com.airportdemo.models.runway.SurfaceTypeStats;
+import lombok.Builder;
+import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public interface CountryService {
-    Optional<Country> queryCountry(final String queryString);
-    List<Country> topCountriesInAirportCount();
-    List<Country> lowestCountriesInAirportCount();
-    List<SurfaceTypeStats> getSurfaceStatistics(final Country country);
-    List<CountrySurfaceTypeStats> getAllSurfaceStatistics();
+@Data
+public class CountrySurfaceTypeStats {
+    private final Country country;
+    private final List<SurfaceTypeStats> surfaceTypeStats;
+
+    @Builder
+    private CountrySurfaceTypeStats(final Country country,
+                                    final List<SurfaceTypeStats> surfaceTypeStats) {
+        this.country = country;
+        this.surfaceTypeStats = Optional.ofNullable(surfaceTypeStats).orElse(new ArrayList<>());
+    }
 }

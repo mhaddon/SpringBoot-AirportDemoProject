@@ -16,15 +16,16 @@
 
 package com.airportdemo.models.country;
 
+import com.airportdemo.models.runway.SurfaceTypeStats;
 import com.airportdemo.modules.Query.PhraseQuery;
-import com.airportdemo.modules.Query.SortQuery;
-import org.apache.lucene.search.SortField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -32,13 +33,13 @@ public class CountryServiceImpl implements CountryService {
 
     private final PhraseQuery phraseQuery;
 
-    private final SortQuery sortQuery;
+    private final CountryRepository countryRepository;
 
     @Autowired
     public CountryServiceImpl(final PhraseQuery phraseQuery,
-                              final SortQuery sortQuery) {
+                              final CountryRepository countryRepository) {
         this.phraseQuery = phraseQuery;
-        this.sortQuery = sortQuery;
+        this.countryRepository = countryRepository;
     }
 
     @Override
@@ -53,18 +54,33 @@ public class CountryServiceImpl implements CountryService {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public List<Country> topCountriesInAirportCount() {
-        return sortQuery.parse(Country.class, new SortField("airportCount", SortField.Type.INT, false))
-                .setMaxResults(10)
-                .getResultList();
+        return countryRepository.topCountriesInAirportCount();
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public List<Country> lowestCountriesInAirportCount() {
-        return sortQuery.parse(Country.class, new SortField("airportCount", SortField.Type.INT, true))
-                .setMaxResults(10)
-                .getResultList();
+        return countryRepository.lowestCountriesInAirportCount();
+    }
+
+    @Override
+    public List<SurfaceTypeStats> getSurfaceStatistics(final Country country) {
+        return countryRepository.typeOfRunways(country.getId()).stream()
+                .map(Object[].class::cast)
+                .map(result -> SurfaceTypeStats.builder()
+                        .surface(result[0].toString())
+                        .count(Integer.parseInt(result[1].toString()))
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CountrySurfaceTypeStats> getAllSurfaceStatistics() {
+        return countryRepository.findAll().stream()
+                .map(country -> CountrySurfaceTypeStats.builder()
+                        .country(country)
+                        .surfaceTypeStats(getSurfaceStatistics(country))
+                        .build())
+                .collect(Collectors.toList());
     }
 }

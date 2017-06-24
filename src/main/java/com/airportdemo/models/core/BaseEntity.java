@@ -16,6 +16,7 @@
 
 package com.airportdemo.models.core;
 
+import com.airportdemo.models.country.Country;
 import com.airportdemo.modules.SearchAnalysers;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -34,10 +35,9 @@ import org.apache.lucene.analysis.snowball.SnowballPorterFilterFactory;
 import org.apache.lucene.analysis.standard.StandardFilterFactory;
 import org.apache.lucene.analysis.standard.StandardTokenizerFactory;
 import org.hibernate.search.annotations.*;
+import org.hibernate.search.annotations.Parameter;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Optional;
 

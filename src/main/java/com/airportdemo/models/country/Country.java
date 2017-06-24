@@ -99,11 +99,11 @@ public class Country extends BaseEntity implements Serializable {
         this.airports = Optional.ofNullable(airports).orElse(new HashSet<>());
     }
 
-    @Field(name = "airportCount", analyze = Analyze.NO, store = Store.NO, index = Index.NO)
-    @SortableField(forField = "airportCount")
-    @NumericField(forField = "airportCount")
-    @JsonIgnore
-    public Integer getAirportCount() {
-        return getAirports().size();
-    }
+//    @Field(name = "airportCount", analyze = Analyze.NO, store = Store.NO, index = Index.NO)
+//    @SortableField(forField = "airportCount")
+//    @NumericField(forField = "airportCount")
+//    @JsonIgnore
+//    public Integer getAirportCount() {
+//        return getAirports().size();
+//    }
 }
