@@ -14,9 +14,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.airportdemo.modules;
+package com.airportdemo.modules.Query;
 
 import org.apache.lucene.search.Query;
+import org.apache.lucene.search.Sort;
+import org.apache.lucene.search.SortField;
 import org.hibernate.search.SearchFactory;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.FullTextQuery;
@@ -29,35 +31,18 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 @Component
-public class PhraseQuery {
+public class SortQuery {
 
     @PersistenceContext
     private EntityManager entityManager;
 
-    public FullTextQuery parse(final Class clazz, final String queryString, final String[] fields) {
-        final Query query = phraseQuery(clazz, parseQueryString(queryString), fields);
+    public FullTextQuery parse(final Class clazz, final SortField ...fields) {
+        final QueryBuilder builder = getSearchFactory().buildQueryBuilder().forEntity(clazz).get();
 
-        return getFullTextEntityManager()
-                .createFullTextQuery(query, clazz);
-    }
+        final Query query = builder.all().createQuery();
+        final Sort sort = new Sort(fields);
 
-    private Query phraseQuery(final Class clazz, final String queryString, final String[] fields) {
-        final QueryBuilder titleQB = getSearchFactory()
-                .buildQueryBuilder().forEntity(clazz).get();
-
-        PhraseMatchingContext matchingContext = titleQB.phrase()
-                .withSlop(3)
-                .onField(fields[0]);
-
-        for (Integer i = 1; i < fields.length; i++) {
-            matchingContext = matchingContext.andField(fields[i]);
-        }
-
-        return matchingContext.sentence(queryString.toLowerCase()).createQuery();
-    }
-
-    private String parseQueryString(final String queryString) {
-        return queryString != null && !queryString.isEmpty() ? queryString : " ";
+        return getFullTextEntityManager().createFullTextQuery(query, clazz).setSort(sort);
     }
 
     private FullTextEntityManager getFullTextEntityManager() {

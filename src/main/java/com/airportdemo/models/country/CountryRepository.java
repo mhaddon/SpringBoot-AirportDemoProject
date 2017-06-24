@@ -24,5 +24,4 @@ import java.util.Optional;
 @Repository
 public interface CountryRepository extends BaseRepository<Country> {
     Optional<Country> findOneByCode(final String isoCode);
-
 }

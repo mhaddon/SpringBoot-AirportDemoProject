@@ -16,7 +16,9 @@
 
 package com.airportdemo.models.country;
 
-import com.airportdemo.modules.PhraseQuery;
+import com.airportdemo.modules.Query.PhraseQuery;
+import com.airportdemo.modules.Query.SortQuery;
+import org.apache.lucene.search.SortField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,9 +32,13 @@ public class CountryServiceImpl implements CountryService {
 
     private final PhraseQuery phraseQuery;
 
+    private final SortQuery sortQuery;
+
     @Autowired
-    public CountryServiceImpl(final PhraseQuery phraseQuery) {
+    public CountryServiceImpl(final PhraseQuery phraseQuery,
+                              final SortQuery sortQuery) {
         this.phraseQuery = phraseQuery;
+        this.sortQuery = sortQuery;
     }
 
     @Override
@@ -44,5 +50,21 @@ public class CountryServiceImpl implements CountryService {
                 .getResultList();
 
         return countries.isEmpty() ? Optional.empty() : Optional.ofNullable(countries.get(0));
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<Country> topCountriesInAirportCount() {
+        return sortQuery.parse(Country.class, new SortField("airportCount", SortField.Type.INT, false))
+                .setMaxResults(10)
+                .getResultList();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<Country> lowestCountriesInAirportCount() {
+        return sortQuery.parse(Country.class, new SortField("airportCount", SortField.Type.INT, true))
+                .setMaxResults(10)
+                .getResultList();
     }
 }

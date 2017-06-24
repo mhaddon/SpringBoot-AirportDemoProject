@@ -16,8 +16,11 @@
 
 package com.airportdemo.models.country;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface CountryService {
     Optional<Country> queryCountry(final String queryString);
+    List<Country> topCountriesInAirportCount();
+    List<Country> lowestCountriesInAirportCount();
 }
