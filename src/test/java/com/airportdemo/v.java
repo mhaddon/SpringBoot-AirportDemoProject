@@ -14,22 +14,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.airportdemo.models.runway;
+package com.airportdemo;
 
-import lombok.Builder;
-import lombok.Data;
-
-import java.util.Optional;
-
-@Data
-public class RunwayIdentificationStats {
-    private String identification;
-    private Integer count;
-
-    @Builder
-    private RunwayIdentificationStats(final String identification,
-                                      final Integer count) {
-        this.identification = Optional.ofNullable(identification).orElse("unknown");
-        this.count = Optional.ofNullable(count).orElse(0);
-    }
+/**
+ * Created by mhaddon on 25/06/17.
+ */
+public class v {
 }

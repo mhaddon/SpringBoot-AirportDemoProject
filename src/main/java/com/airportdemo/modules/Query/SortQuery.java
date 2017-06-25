@@ -23,7 +23,6 @@ import org.hibernate.search.SearchFactory;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.FullTextQuery;
 import org.hibernate.search.jpa.Search;
-import org.hibernate.search.query.dsl.PhraseMatchingContext;
 import org.hibernate.search.query.dsl.QueryBuilder;
 import org.springframework.stereotype.Component;
 
@@ -36,7 +35,7 @@ public class SortQuery {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public FullTextQuery parse(final Class clazz, final SortField ...fields) {
+    public FullTextQuery parse(final Class clazz, final SortField... fields) {
         final QueryBuilder builder = getSearchFactory().buildQueryBuilder().forEntity(clazz).get();
 
         final Query query = builder.all().createQuery();
@@ -45,11 +44,11 @@ public class SortQuery {
         return getFullTextEntityManager().createFullTextQuery(query, clazz).setSort(sort);
     }
 
-    private FullTextEntityManager getFullTextEntityManager() {
-        return Search.getFullTextEntityManager(entityManager);
-    }
-
     private SearchFactory getSearchFactory() {
         return getFullTextEntityManager().getSearchFactory();
+    }
+
+    private FullTextEntityManager getFullTextEntityManager() {
+        return Search.getFullTextEntityManager(entityManager);
     }
 }

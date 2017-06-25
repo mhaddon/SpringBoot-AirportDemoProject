@@ -72,7 +72,11 @@ public class ChunkIterator<T extends Iterable<U>, U> {
     }
 
     /**
-     * @param consumer
+     * This iterates over the iterable, adds the result to a chunk cache,
+     * when the chunk is full it passes this chunk cache to the consumer callback
+     * Repeat until the iterable has no more elements to iterate over
+     *
+     * @param consumer callback that we will pass the chunks to
      */
     public void iterate(final Consumer<List<U>> consumer) {
         for (final U iteration : getIterable()) {
@@ -86,6 +90,9 @@ public class ChunkIterator<T extends Iterable<U>, U> {
         processChunk(consumer);
     }
 
+    /**
+     * @return Does the current chunk exceed or equal to the chunk size limit
+     */
     protected boolean ifChunkIsFull() {
         return getChunk().size() >= getSize();
     }
@@ -93,10 +100,13 @@ public class ChunkIterator<T extends Iterable<U>, U> {
     /**
      * Processes the chunk and resets the chunk cache
      *
-     * @param consumer
+     * @param consumer callback that we will pass the chunk to
      */
     protected void processChunk(final Consumer<List<U>> consumer) {
-        consumer.accept(getChunk());
+        if (getChunk().size() > 0) {
+            consumer.accept(getChunk());
+        }
+
         getChunk().clear();
     }
 }

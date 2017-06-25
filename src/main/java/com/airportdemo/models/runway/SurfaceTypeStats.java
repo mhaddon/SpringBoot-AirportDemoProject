@@ -18,7 +18,6 @@ package com.airportdemo.models.runway;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.Optional;
 

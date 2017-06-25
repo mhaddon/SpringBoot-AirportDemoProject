@@ -23,8 +23,12 @@ import java.util.Optional;
 
 public interface CountryService {
     Optional<Country> queryCountry(final String queryString);
+
     List<Country> topCountriesInAirportCount();
+
     List<Country> lowestCountriesInAirportCount();
+
     List<SurfaceTypeStats> getSurfaceStatistics(final Country country);
+
     List<CountrySurfaceTypeStats> getAllSurfaceStatistics();
 }

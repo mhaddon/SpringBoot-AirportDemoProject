@@ -53,32 +53,42 @@ public class ChunkIteratorAsync<T extends Iterable<U>, U> extends ChunkIterator<
     }
 
     /**
-     * @param consumer
+     * This iterates over the iterable, adds the result to a chunk cache,
+     * when the chunk is full it passes this chunk cache to a future of the consumer callback
+     * Repeat until the iterable has no more elements to iterate over
+     * Before ending the method we wait until all futures are finished
+     *
+     * @param consumer callback that we will pass the chunks to
      */
     @Override
     final public void iterate(final Consumer<List<U>> consumer) {
-        final List<CompletableFuture<Void>> promises = new ArrayList<>();
+        final List<CompletableFuture<Void>> futures = new ArrayList<>();
         for (final U iteration : getIterable()) {
             getChunk().add(iteration);
 
             if (ifChunkIsFull()) {
-                promises.add(processChunk(consumer, getChunk()));
+                futures.add(processChunk(consumer, getChunk()));
             }
         }
-        promises.add(processChunk(consumer, getChunk()));
+        futures.add(processChunk(consumer, getChunk()));
 
-        CompletableFuture.allOf(promises.toArray(new CompletableFuture[0])).join();
+        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
     }
 
     /**
-     * @param consumer
-     * @param chunk
-     * @return
+     * Processes the chunk in a future and resets the chunk cache
+     * We return the future so we can keep track of its progress
+     *
+     * @param consumer callback that we will pass the chunk to
+     * @param chunk    current chunk status
+     * @return CompletableFuture
      */
     @Async
     private CompletableFuture<Void> processChunk(final Consumer<List<U>> consumer, final List<U> chunk) {
         final List<U> chunkBlock = new ArrayList<>(chunk);
         chunk.clear();
-        return CompletableFuture.runAsync(() -> consumer.accept(chunkBlock));
+
+        // @formatter:off
+        return CompletableFuture.runAsync(chunkBlock.size() > 0 ? () -> consumer.accept(chunkBlock) : () -> {});
     }
 }

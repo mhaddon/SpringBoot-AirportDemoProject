@@ -20,7 +20,6 @@ import com.airportdemo.models.airport.Airport;
 import com.airportdemo.models.core.BaseEntity;
 import com.airportdemo.modules.SearchAnalysers;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.search.annotations.*;
@@ -98,12 +97,4 @@ public class Country extends BaseEntity implements Serializable {
         this.keywords = Optional.ofNullable(keywords).orElse("");
         this.airports = Optional.ofNullable(airports).orElse(new HashSet<>());
     }
-
-//    @Field(name = "airportCount", analyze = Analyze.NO, store = Store.NO, index = Index.NO)
-//    @SortableField(forField = "airportCount")
-//    @NumericField(forField = "airportCount")
-//    @JsonIgnore
-//    public Integer getAirportCount() {
-//        return getAirports().size();
-//    }
 }
