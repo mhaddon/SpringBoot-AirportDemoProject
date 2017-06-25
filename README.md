@@ -43,6 +43,9 @@ java -jar target/airportdemo-1.0.jar
 
 The project defaults to http://localhost:8082
 
+This was developed with and expected to work with OpenJDK-8, OracleJDK is untested
+
+
 #### License
 This project has been released as FREE software for educational purposes.
 ```
