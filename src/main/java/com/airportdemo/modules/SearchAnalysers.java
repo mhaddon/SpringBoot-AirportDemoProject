@@ -21,7 +21,7 @@ package com.airportdemo.modules;
  */
 public final class SearchAnalysers {
     /**
-     * The constant ENGLISH_WORD_ANALYSER.
+     * Standard Word Analyser
      */
     public static final String ENGLISH_WORD_ANALYSER = "EnglishWordAnalyser";
 

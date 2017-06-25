@@ -47,12 +47,34 @@ import java.util.function.Consumer;
 @Component
 @Slf4j
 public class PopulateDatabase implements ApplicationListener<ApplicationReadyEvent>, Ordered {
+    /**
+     * CSV file for all the countries in the world
+     */
     private final Resource countryCsv;
+
+    /**
+     * CSV file for all the airports in the world
+     */
     private final Resource airportCsv;
+
+    /**
+     * CSV file for all the runways in the world
+     */
     private final Resource runwayCsv;
 
+    /**
+     * Strategy for parsing the Country CSV file
+     */
     private final CountryCSVParser countryCSVParser;
+
+    /**
+     * Strategy for parsing the Airport CSV file
+     */
     private final AirportCSVParser airportCSVParser;
+
+    /**
+     * Strategy for parsing the RUnway CSV file
+     */
     private final RunwayCSVParser runwayCSVParser;
 
     @Autowired
@@ -71,7 +93,7 @@ public class PopulateDatabase implements ApplicationListener<ApplicationReadyEve
     }
 
     /**
-     * Build lucene search index
+     * Populate database with the supplied CSV files
      *
      * @param event application ready event
      */
@@ -93,6 +115,14 @@ public class PopulateDatabase implements ApplicationListener<ApplicationReadyEve
     }
 
 
+    /**
+     * Reads a file in the CSV format and passes the result to the passed in consumer
+     * This method processes the CSV in chunks, meaning the consumer gets a list of a portion of the records
+     * Ontop of that it processes the chunks async, so they will come out of order
+     *
+     * @param fileResource      Spring file resource
+     * @param consumer          Consumer we will pass processed CSV to
+     */
     private void readFileRecords(final Resource fileResource, final Consumer<List<CSVRecord>> consumer) {
         try {
             final Reader reader = new InputStreamReader(fileResource.getInputStream(), "UTF-8");
@@ -105,6 +135,13 @@ public class PopulateDatabase implements ApplicationListener<ApplicationReadyEve
         }
     }
 
+    /**
+     * We populate the database after spring has done all of its own stuff
+     * If we populate too early we may populate BEFORE the database is created...
+     * Which would be silly
+     *
+     * @return integer
+     */
     @Override
     public final int getOrder() {
         return LOWEST_PRECEDENCE - 1;

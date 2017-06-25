@@ -137,23 +137,23 @@ public class Runway extends BaseEntity implements Serializable {
                    final Double headingHe,
                    final Double displacedThresholdFeetHe) {
         super(id);
-        this.lengthFeet = lengthFeet;
-        this.widthFeet = widthFeet;
-        this.surface = surface;
-        this.lighted = lighted;
-        this.closed = closed;
-        this.identification = identification;
-        this.longitude = longitude;
-        this.latitude = latitude;
-        this.elevationFeet = elevationFeet;
-        this.heading = heading;
-        this.displacedThresholdFeet = displacedThresholdFeet;
-        this.identificationHe = identificationHe;
-        this.latitudeHe = latitudeHe;
-        this.longitudeHe = longitudeHe;
-        this.elevationFeetHe = elevationFeetHe;
-        this.headingHe = headingHe;
-        this.displacedThresholdFeetHe = displacedThresholdFeetHe;
+        this.lengthFeet = Optional.ofNullable(lengthFeet).orElse(0);
+        this.widthFeet = Optional.ofNullable(widthFeet).orElse(0);
+        this.surface = Optional.ofNullable(surface).orElse("");
+        this.lighted = Optional.ofNullable(lighted).orElse(false);
+        this.closed = Optional.ofNullable(closed).orElse(false);
+        this.identification = Optional.ofNullable(identification).orElse("");
+        this.longitude = Optional.ofNullable(longitude).orElse(0.0);
+        this.latitude = Optional.ofNullable(latitude).orElse(0.0);
+        this.elevationFeet = Optional.ofNullable(elevationFeet).orElse(0.0);
+        this.heading = Optional.ofNullable(heading).orElse(0.0);
+        this.displacedThresholdFeet = Optional.ofNullable(displacedThresholdFeet).orElse(0.0);
+        this.identificationHe = Optional.ofNullable(identificationHe).orElse("");
+        this.latitudeHe = Optional.ofNullable(latitudeHe).orElse(0.0);
+        this.longitudeHe = Optional.ofNullable(longitudeHe).orElse(0.0);
+        this.elevationFeetHe = Optional.ofNullable(elevationFeetHe).orElse(0.0);
+        this.headingHe = Optional.ofNullable(headingHe).orElse(0.0);
+        this.displacedThresholdFeetHe = Optional.ofNullable(displacedThresholdFeetHe).orElse(0.0);
 
         this.airport = airport;
     }
