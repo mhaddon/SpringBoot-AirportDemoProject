@@ -14,7 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.airportdemo.components.CSVParser;
+package com.airportdemo.modules.CSVParser;
 
 import org.apache.commons.csv.CSVRecord;
 

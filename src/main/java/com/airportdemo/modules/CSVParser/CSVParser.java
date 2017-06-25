@@ -14,10 +14,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.airportdemo.components.CSVParser;
+package com.airportdemo.modules.CSVParser;
 
 import com.airportdemo.models.core.BaseEntity;
-import com.airportdemo.modules.CSVEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.csv.CSVRecord;
 

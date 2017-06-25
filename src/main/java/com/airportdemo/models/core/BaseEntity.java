@@ -43,7 +43,7 @@ import java.util.Optional;
 
 @MappedSuperclass
 @Data
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode
 @AnalyzerDefs({
         @AnalyzerDef(name = SearchAnalysers.EDGE_ANALYSER,
                 // Split input into tokens according to tokenizer

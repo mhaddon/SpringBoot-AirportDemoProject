@@ -52,6 +52,10 @@ public class BuildSearchIndex implements ApplicationListener<ApplicationReadyEve
         }
     }
 
+    /**
+     * Hibernate Search indexing must be the last thing to happen on startup
+     * @return integer
+     */
     @Override
     public int getOrder() {
         return LOWEST_PRECEDENCE;

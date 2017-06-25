@@ -1,4 +1,5 @@
 # Airport Demo Project
+![Travis Tests](https://travis-ci.org/mhaddon/SpringBoot-AirportDemoProject.svg?branch=master)
 
 This project is a simple application to show my skills as a Java developer.
 
@@ -21,15 +22,26 @@ The project was proposed to me during the process of looking for employment at "
 > 2.2 Choosing Reports will print the following:
 >
 > 10 countries with highest number of airports (with count) and countries with lowest number of airports.
+>
 > Type of runways (as indicated in "surface" column) per country
+>
 > Bonus: Print the top 10 most common runway identifications (indicated in "le_ident" column)
+>
 > Feel free to use any library/framework as necessary but write it as a web application.
 >
 > Please write the code as if you are writing production code, possibly with tests.
 
 #### Setup
 
-...
+The project attempts to keep setup minimal, you should be able to build the project with:
+
+mvn clean package -Dgroups="com.airportdemo.testcategory.Fast,com.airportdemo.testcategory.Slow"
+
+Then run the project with a simple:
+
+java -jar target/airportdemo-1.0.jar
+
+The project defaults to http://localhost:8082
 
 #### License
 This project has been released as FREE software for educational purposes.

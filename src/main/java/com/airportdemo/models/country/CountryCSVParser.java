@@ -16,8 +16,8 @@
 
 package com.airportdemo.models.country;
 
-import com.airportdemo.components.CSVParser.CSVParser;
-import com.airportdemo.modules.CSVEntity;
+import com.airportdemo.modules.CSVParser.CSVEntity;
+import com.airportdemo.modules.CSVParser.CSVParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

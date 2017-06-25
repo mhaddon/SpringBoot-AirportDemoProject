@@ -16,10 +16,10 @@
 
 package com.airportdemo.models.runway;
 
-import com.airportdemo.components.CSVParser.CSVParser;
 import com.airportdemo.models.airport.Airport;
 import com.airportdemo.models.airport.AirportRepository;
-import com.airportdemo.modules.CSVEntity;
+import com.airportdemo.modules.CSVParser.CSVEntity;
+import com.airportdemo.modules.CSVParser.CSVParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
