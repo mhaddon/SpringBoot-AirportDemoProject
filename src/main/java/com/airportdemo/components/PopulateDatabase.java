@@ -120,13 +120,14 @@ public class PopulateDatabase implements ApplicationListener<ApplicationReadyEve
      * This method processes the CSV in chunks, meaning the consumer gets a list of a portion of the records
      * Ontop of that it processes the chunks async, so they will come out of order
      *
-     * @param fileResource      Spring file resource
-     * @param consumer          Consumer we will pass processed CSV to
+     * @param fileResource Spring file resource
+     * @param consumer     Consumer we will pass processed CSV to
      */
     private void readFileRecords(final Resource fileResource, final Consumer<List<CSVRecord>> consumer) {
-        try {
-            final Reader reader = new InputStreamReader(fileResource.getInputStream(), "UTF-8");
-            final CSVParser parser = new CSVParser(reader, CSVFormat.DEFAULT.withHeader());
+        try (
+                final Reader reader = new InputStreamReader(fileResource.getInputStream(), "UTF-8");
+                final CSVParser parser = new CSVParser(reader, CSVFormat.DEFAULT.withHeader())
+        ) {
             ChunkIteratorAsync.of(parser)
                     .setSize(1000)
                     .iterate(consumer);
