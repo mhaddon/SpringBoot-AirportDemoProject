@@ -3,17 +3,9 @@
 
 This project is a simple application to show my skills as a Java developer.
 
-The project was proposed to me during the process of looking for employment at "Lunatech Labs" as a code assessment.
-
 #### Assessment
 
-> 1. Download three CSV files from Amazon S3 :
->
-> https://s3-eu-west-1.amazonaws.com/lunatechassessments/countries.csv
->
-> https://s3-eu-west-1.amazonaws.com/lunatechassessments/airports.csv
->
-> https://s3-eu-west-1.amazonaws.com/lunatechassessments/runways.csv
+> 1. Download three CSV files, one for airports, one for runways and another for countries.
 >
 > 2. Write a web application in Java or Scala that will ask the user for two actions : Query or Reports.
 >
