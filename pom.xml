@@ -22,7 +22,7 @@
     <groupId>com.airportdemo</groupId>
     <artifactId>airportdemo</artifactId>
     <version>1.0</version>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
 
     <name>airportdemo</name>
     <description>Demo project for Spring Boot</description>
@@ -202,9 +202,9 @@
 
         <!-- Database Drivers -->
         <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <scope>runtime</scope>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>6.0.6</version>
         </dependency>
 
         <!-- Misc -->

@@ -48,3 +48,4 @@ nbdist/
 #----------------------
 
 lucene_indexes
+.DS_STORE
