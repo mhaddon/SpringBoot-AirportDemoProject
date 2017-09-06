@@ -29,38 +29,38 @@ public interface CountryRepository extends BaseRepository<Country> {
     Optional<Country> findOneByCode(final String isoCode);
 
     @Query(
-            value = "SELECT * FROM \"countries\" as \"c\"" +
+            value = "SELECT * FROM `countries` as c " +
                     "LEFT JOIN (" +
-                    "    SELECT IFNULL(COUNT(*), 0) as \"airport_count\", \"airports\".\"country_id\" FROM \"airports\" " +
-                    "    GROUP BY \"airports\".\"country_id\"" +
-                    ") as \"a\" ON \"c\".\"id\" = \"a\".\"country_id\" " +
-                    "ORDER BY \"a\".\"airport_count\" DESC, \"c\".\"name\" ASC " +
+                    "    SELECT IFNULL(COUNT(*), 0) as `airport_count`, `airports`.`country_id` FROM `airports` " +
+                    "    GROUP BY `airports`.`country_id` " +
+                    ") as a ON `c`.`id` = `a`.`country_id` " +
+                    "ORDER BY `a`.`airport_count` DESC, `c`.`name` ASC " +
                     "LIMIT 10",
             nativeQuery = true
     )
     List<Country> topCountriesInAirportCount();
 
     @Query(
-            value = "SELECT * FROM \"countries\" as \"c\"" +
-                    "LEFT JOIN (" +
-                    "    SELECT IFNULL(COUNT(*), 0) as \"airport_count\", \"airports\".\"country_id\" FROM \"airports\" " +
-                    "    GROUP BY \"airports\".\"country_id\"" +
-                    ") as \"a\" ON \"c\".\"id\" = \"a\".\"country_id\" " +
-                    "ORDER BY \"a\".\"airport_count\" ASC, \"c\".\"name\" ASC " +
+            value = "SELECT * FROM `countries` as c " +
+                    "LEFT JOIN ( " +
+                    "    SELECT IFNULL(COUNT(*), 0) as `airport_count`, `airports`.`country_id` FROM `airports` " +
+                    "    GROUP BY `airports`.`country_id` " +
+                    ") as a ON `c`.`id` = `a`.`country_id` " +
+                    "ORDER BY `a`.`airport_count` ASC, `c`.`name` ASC " +
                     "LIMIT 10",
             nativeQuery = true
     )
     List<Country> lowestCountriesInAirportCount();
 
     @Query(
-            value = "SELECT \"r\".\"surface\" as \"surface\", COUNT(\"r\".\"surface\") as \"count\" FROM \"airports\" as \"a\" " +
-                    "LEFT JOIN (" +
-                    "    SELECT \"runways\".\"airport_id\", \"runways\".\"surface\" FROM \"runways\" " +
-                    "    GROUP BY  \"runways\".\"surface\", \"runways\".\"airport_id\" " +
-                    ") as \"r\" ON \"a\".\"id\" = \"r\".\"airport_id\" " +
-                    "WHERE \"country_id\"=:country_id AND \"r\".\"surface\" IS NOT NULL " +
-                    "GROUP BY \"surface\" " +
-                    "ORDER BY \"count\" DESC",
+            value = "SELECT `r`.`surface` as surface, COUNT(`r`.`surface`) as `count` FROM `airports` as a " +
+                    "LEFT JOIN ( " +
+                    "    SELECT `runways`.`airport_id`, `runways`.`surface` FROM `runways` " +
+                    "    GROUP BY  `runways`.`surface`, `runways`.`airport_id` " +
+                    ") as r ON `a`.`id` = `r`.`airport_id` " +
+                    "WHERE `country_id`=:country_id AND `r`.`surface` IS NOT NULL " +
+                    "GROUP BY `surface` " +
+                    "ORDER BY `count` DESC",
             nativeQuery = true
     )
     List<Object> typeOfRunways(@Param("country_id") final Long countryId);

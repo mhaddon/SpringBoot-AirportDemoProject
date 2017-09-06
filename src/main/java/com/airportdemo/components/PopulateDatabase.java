@@ -17,6 +17,7 @@
 package com.airportdemo.components;
 
 
+import com.airportdemo.config.DatabaseConfig;
 import com.airportdemo.models.airport.AirportCSVParser;
 import com.airportdemo.models.country.CountryCSVParser;
 import com.airportdemo.models.runway.RunwayCSVParser;
@@ -77,19 +78,23 @@ public class PopulateDatabase implements ApplicationListener<ApplicationReadyEve
      */
     private final RunwayCSVParser runwayCSVParser;
 
+    private final DatabaseConfig databaseConfig;
+
     @Autowired
     public PopulateDatabase(final CountryCSVParser countryCSVParser,
                             final AirportCSVParser airportCSVParser,
                             final RunwayCSVParser runwayCSVParser,
                             @Value(value = "classpath:static/countries.csv") final Resource countryCsv,
                             @Value(value = "classpath:static/airports.csv") final Resource airportCsv,
-                            @Value(value = "classpath:static/runways.csv") final Resource runwayCsv) {
+                            @Value(value = "classpath:static/runways.csv") final Resource runwayCsv,
+                            final DatabaseConfig databaseConfig) {
         this.countryCSVParser = countryCSVParser;
         this.airportCSVParser = airportCSVParser;
         this.runwayCSVParser = runwayCSVParser;
         this.countryCsv = countryCsv;
         this.airportCsv = airportCsv;
         this.runwayCsv = runwayCsv;
+        this.databaseConfig = databaseConfig;
     }
 
     /**
@@ -99,19 +104,23 @@ public class PopulateDatabase implements ApplicationListener<ApplicationReadyEve
      */
     @Override
     public final void onApplicationEvent(final ApplicationReadyEvent event) {
-        final Date timeStarted = Calendar.getInstance().getTime();
-        logger.info("[PopulateDatabase] Populating database, this may take a minute.");
-        logger.info("[PopulateDatabase] Importing Countries...");
-        readFileRecords(countryCsv, countryCSVParser::parseAll);
-        logger.info("[PopulateDatabase] Imported Countries");
-        logger.info("[PopulateDatabase] Importing Airports...");
-        readFileRecords(airportCsv, airportCSVParser::parseAll);
-        logger.info("[PopulateDatabase] Imported Airports");
-        logger.info("[PopulateDatabase] Importing Runways...");
-        readFileRecords(runwayCsv, runwayCSVParser::parseAll);
-        logger.info("[PopulateDatabase] Imported Runways");
-        final Date timeEnded = Calendar.getInstance().getTime();
-        logger.info("[PopulateDatabase] Populating database took {}ms", timeEnded.getTime() - timeStarted.getTime());
+        if (databaseConfig.getUseExistingData()) {
+            logger.info("[PopulateDatabase] Skipping importing data... using existing data.");
+        } else {
+            final Date timeStarted = Calendar.getInstance().getTime();
+            logger.info("[PopulateDatabase] Populating database, this may take a minute.");
+            logger.info("[PopulateDatabase] Importing Countries...");
+            readFileRecords(countryCsv, countryCSVParser::parseAll);
+            logger.info("[PopulateDatabase] Imported Countries");
+            logger.info("[PopulateDatabase] Importing Airports...");
+            readFileRecords(airportCsv, airportCSVParser::parseAll);
+            logger.info("[PopulateDatabase] Imported Airports");
+            logger.info("[PopulateDatabase] Importing Runways...");
+            readFileRecords(runwayCsv, runwayCSVParser::parseAll);
+            logger.info("[PopulateDatabase] Imported Runways");
+            final Date timeEnded = Calendar.getInstance().getTime();
+            logger.info("[PopulateDatabase] Populating database took {}ms", timeEnded.getTime() - timeStarted.getTime());
+        }
     }
 
 

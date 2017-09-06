@@ -24,6 +24,7 @@ import lombok.*;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.search.annotations.*;
 import org.hibernate.search.annotations.Index;
+import org.springframework.boot.autoconfigure.info.ProjectInfoProperties;
 
 import javax.persistence.*;
 import java.io.Serializable;

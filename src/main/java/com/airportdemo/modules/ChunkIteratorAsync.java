@@ -84,7 +84,7 @@ public class ChunkIteratorAsync<T extends Iterable<U>, U> extends ChunkIterator<
      * @return CompletableFuture
      */
     @Async
-    private CompletableFuture<Void> processChunk(final Consumer<List<U>> consumer, final List<U> chunk) {
+    protected CompletableFuture<Void> processChunk(final Consumer<List<U>> consumer, final List<U> chunk) {
         final List<U> chunkBlock = new ArrayList<>(chunk);
         chunk.clear();
 

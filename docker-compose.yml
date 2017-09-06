@@ -1,0 +1,12 @@
+version: '3'
+services:
+  web:
+    ports:
+      - "8080:8082"
+    image: "springio/airportdemo:latest"
+    links:
+      - "db"
+  db:
+    ports:
+      - "13306:3306"
+    image: "mysqldb:latest"

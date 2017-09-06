@@ -16,6 +16,7 @@
 
 package com.airportdemo.config;
 
+import lombok.Getter;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -82,6 +83,9 @@ public class DatabaseConfig {
 
     private final String hibernateUseSqlComments;
 
+    @Getter
+    private final Boolean useExistingData;
+
     /**
      * Instantiates a new Database config.
      *
@@ -105,7 +109,8 @@ public class DatabaseConfig {
                           @Value("${spring.jpa.hibernate.ddl-auto}") final String hibernateHbm2DDLAuto,
                           @Value("${entitymanager.packagesToScan}") final String entitymanagerPackagesToScan,
                           @Value("${spring.jpa.properties.hibernate.use_sql_comments}") final String hibernateUseSqlComments,
-                          @Value("${spring.jpa.properties.hibernate.format_sql}") final String hibernateFormatSql) {
+                          @Value("${spring.jpa.properties.hibernate.format_sql}") final String hibernateFormatSql,
+                          @Value("${airportdemo.use_existing_data}") final Boolean useExistingData) {
         this.dbDriver = dbDriver;
         this.dbPassword = dbPassword;
         this.dbUrl = dbUrl;
@@ -116,6 +121,7 @@ public class DatabaseConfig {
         this.entitymanagerPackagesToScan = entitymanagerPackagesToScan;
         this.hibernateFormatSql = hibernateFormatSql;
         this.hibernateUseSqlComments = hibernateUseSqlComments;
+        this.useExistingData = useExistingData;
     }
 
     /**
