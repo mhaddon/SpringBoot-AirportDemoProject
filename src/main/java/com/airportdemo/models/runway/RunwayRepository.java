@@ -25,14 +25,14 @@ import java.util.List;
 @Repository
 public interface RunwayRepository extends BaseRepository<Runway> {
     @Query(
-            value = "SELECT \"r\".\"le_ident\", COUNT(\"r\".\"le_ident\") as \"count\" FROM \"airports\" as \"a\" " +
-                    "LEFT JOIN (" +
-                    "    SELECT \"runways\".\"airport_id\", \"runways\".\"le_ident\" FROM \"runways\" " +
-                    "    GROUP BY  \"runways\".\"le_ident\", \"runways\".\"airport_id\" " +
-                    ") as \"r\" ON \"a\".\"id\" = \"r\".\"airport_id\" " +
-                    "WHERE \"r\".\"le_ident\" IS NOT NULL " +
-                    "GROUP BY \"r\".\"le_ident\" " +
-                    "ORDER BY \"count\" DESC, \"le_ident\" ASC " +
+            value = "SELECT `r`.`le_ident`, COUNT(`r`.`le_ident`) as `count` FROM `airports` as `a` " +
+                    "LEFT JOIN ( " +
+                    "    SELECT `runways`.`airport_id`, `runways`.`le_ident` FROM `runways` " +
+                    "    GROUP BY  `runways`.`le_ident`, `runways`.`airport_id` " +
+                    ") as `r` ON `a`.`id` = `r`.`airport_id` " +
+                    "WHERE `r`.`le_ident` IS NOT NULL " +
+                    "GROUP BY `r`.`le_ident` " +
+                    "ORDER BY `count` DESC, `le_ident` ASC " +
                     "LIMIT 10",
             nativeQuery = true
     )
