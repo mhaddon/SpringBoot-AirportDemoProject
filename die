@@ -1,17 +1,17 @@
-docker stop $(docker ps -a -q) > /dev/null 2>&1
-docker rm $(docker ps -a -q) > /dev/null 2>&1
-docker rmi $(docker images -a -q) > /dev/null 2>&1
+docker stop -f $(docker ps -a -q) > /dev/null 2>&1
+docker rm -f $(docker ps -a -q) > /dev/null 2>&1
+docker rmi -f $(docker images -a -q) > /dev/null 2>&1
 docker pull mysql
 docker pull openjdk
 docker pull nginx:alpine
 mvn install dockerfile:build
 
 cd ./proxy
-docker build -t mhaddon/proxy .
+docker build -t mhaddon/airportdemo_proxy .
 cd ../mysqldb
-docker build -t mhaddon/mysqldb .
+docker build -t mhaddon/airportdemo_mysqldb .
 
 
-docker push mhaddon/proxy
-docker push mhaddon/mysqldb
+docker push mhaddon/airportdemo_proxy
+docker push mhaddon/airportdemo_mysqldb
 docker push mhaddon/airportdemo

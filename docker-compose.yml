@@ -5,10 +5,10 @@ services:
     links:
       - "db"
   db:
-    image: "mhaddon/mysqldb:latest"
+    image: "mhaddon/airportdemo_mysqldb:latest"
   proxy:
     ports:
       - "8080:8080"
-    image: "mhaddon/proxy:latest"
+    image: "mhaddon/airportdemo_proxy:latest"
     depends_on:
       - "web"
