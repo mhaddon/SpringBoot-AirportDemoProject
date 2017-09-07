@@ -84,7 +84,7 @@
         <apache.commons.version>3.6</apache.commons.version>
         <ehcache.version>3.3.0</ehcache.version>
 
-        <docker.image.prefix>springio</docker.image.prefix>
+        <docker.image.prefix>mhaddon</docker.image.prefix>
     </properties>
 
     <dependencies>

@@ -1,14 +1,14 @@
 version: '3'
 services:
   web:
-    image: "springio/airportdemo:latest"
+    image: "mhaddon/airportdemo:latest"
     links:
       - "db"
   db:
-    image: "mysqldb:latest"
+    image: "mhaddon/mysqldb:latest"
   proxy:
     ports:
       - "8080:8080"
-    image: "proxy"
+    image: "mhaddon/proxy:latest"
     depends_on:
       - "web"

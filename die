@@ -7,6 +7,11 @@ docker pull nginx:alpine
 mvn install dockerfile:build
 
 cd ./proxy
-docker build -t proxy .
+docker build -t mhaddon/proxy .
 cd ../mysqldb
-docker build -t mysqldb .
+docker build -t mhaddon/mysqldb .
+
+
+docker push mhaddon/proxy
+docker push mhaddon/mysqldb
+docker push mhaddon/airportdemo
