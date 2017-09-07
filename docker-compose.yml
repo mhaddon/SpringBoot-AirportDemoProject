@@ -4,6 +4,8 @@ services:
     image: "mhaddon/airportdemo:latest"
     links:
       - "db"
+    environment:
+      SPRING_DATASOURCE_URL: "jdbc:mysql://db:3306/airportdemo?autoReconnect=true&useSSL=false&serverTimezone=UTC"
   db:
     image: "mhaddon/airportdemo_mysqldb:latest"
   proxy:
