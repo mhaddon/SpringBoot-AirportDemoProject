@@ -3,6 +3,10 @@ docker rm $(docker ps -a -q) > /dev/null 2>&1
 docker rmi $(docker images -a -q) > /dev/null 2>&1
 docker pull mysql
 docker pull openjdk
+docker pull nginx:alpine
 mvn install dockerfile:build
-cd ~/dumps
+
+cd ./proxy
+docker build -t proxy .
+cd ../mysqldb
 docker build -t mysqldb .
