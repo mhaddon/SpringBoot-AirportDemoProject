@@ -1,0 +1,10 @@
+{
+  "marathon-lb":{
+    "name":"marathon-lb-internal",
+    "haproxy-group":"internal",
+    "bind-http-https":false,
+    "role":"",
+    "cpus": 1.0,
+    "mem": 512.0
+  }
+}
