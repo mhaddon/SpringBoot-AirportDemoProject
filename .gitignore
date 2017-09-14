@@ -49,3 +49,6 @@ nbdist/
 
 lucene_indexes
 .DS_STORE
+.vagrant/
+get-docker.sh
+playbook.retry

@@ -4,6 +4,7 @@ docker rmi -f $(docker images -a -q) > /dev/null 2>&1
 docker pull mysql
 docker pull openjdk
 docker pull nginx:alpine
+mvn clean package
 mvn install dockerfile:build
 
 cd ./proxy

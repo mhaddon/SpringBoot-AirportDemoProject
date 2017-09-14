@@ -1,0 +1,70 @@
+---
+- hosts: all
+  tasks:
+    - name: Update all packages
+      become: true
+      apt:
+        upgrade: dist
+        update_cache: yes
+
+    - name: update cache and install vim
+      become: true
+      apt:
+        name: vim
+        state: latest
+        update_cache: yes
+
+    - name: 'Install pip'
+      become: true
+      apt:
+       name: python-pip
+       state: present
+
+    - name: 'Install docker-py'
+      become: true
+      pip:
+        name: docker-py
+        state: present
+
+    - name: install docker
+      become: true
+      shell: curl -fsSL get.docker.com -o get-docker.sh && chmod +x get-docker.sh && ./get-docker.sh
+      args:
+          creates: get-docker.sh
+
+- hosts: backend
+  tasks:
+    - name: mysqldb
+      become: true 
+      docker_container:
+        name: mysqldb
+        network_mode: bridge
+        image: mhaddon/airportdemo_mysqldb:latest
+        restart_policy: on-failure
+        pull: true
+
+    - name: airportdemo
+      become: true
+      docker_container:
+        name: airportdemo
+        network_mode: bridge
+        image: mhaddon/airportdemo:latest
+        restart_policy: on-failure
+        ports:
+          - "8082:8082"
+        links:
+          - "mysqldb:db"
+        pull: true
+
+- hosts: edge
+  tasks:
+    - name: proxy
+      become: true
+      docker_container:
+        name: proxy
+        network_mode: bridge
+        image: mhaddon/airportdemo_proxy:latest
+        restart_policy: on-failure
+        ports:
+          - "8080:8080"
+        pull: true
