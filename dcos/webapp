@@ -1,0 +1,66 @@
+{
+  "id": "/webapp",
+  "instances": 1,
+  "cpus": 0.5,
+  "mem": 1200,
+  "disk": 0,
+  "gpus": 0,
+  "constraints": [],
+  "fetch": [],
+  "storeUrls": [],
+  "backoffSeconds": 1,
+  "backoffFactor": 1.15,
+  "maxLaunchDelaySeconds": 3600,
+  "container": {
+    "type": "DOCKER",
+    "volumes": [],
+    "docker": {
+      "image": "danielalarcao/airport-spring-boot-docker_webapp",
+      "network": "BRIDGE",
+      "portMappings": [
+        {
+          "containerPort": 3000,
+          "hostPort": 0,
+          "servicePort": 10001,
+          "protocol": "tcp",
+          "name": "webapp"
+        }
+      ],
+      "privileged": false,
+      "parameters": [],
+      "forcePullImage": true
+    }
+  },
+  "healthChecks": [
+    {
+      "gracePeriodSeconds": 300,
+      "intervalSeconds": 60,
+      "timeoutSeconds": 20,
+      "maxConsecutiveFailures": 3,
+      "portIndex": 0,
+      "path": "/",
+      "protocol": "MESOS_HTTP",
+      "delaySeconds": 15
+    }
+  ],
+  "readinessChecks": [],
+  "dependencies": [],
+  "upgradeStrategy": {
+    "minimumHealthCapacity": 1,
+    "maximumOverCapacity": 1
+  },
+  "unreachableStrategy": {
+    "inactiveAfterSeconds": 300,
+    "expungeAfterSeconds": 600
+  },
+  "killSelection": "YOUNGEST_FIRST",
+  "requirePorts": false,
+  "labels": {
+    "HAPROXY_GROUP": "external",
+    "HAPROXY_0_VHOST": "daniel.webapp.hello",
+    "HAPROXY_0_PORT": "80"
+  },
+  "env": {
+    "SPRING_DATASOURCE_URL": "jdbc:mysql://mysql.marathon.mesos/lunatech"
+  }
+}
