@@ -55,6 +55,8 @@
         links:
           - "mysqldb:db"
         pull: true
+        env:
+            SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/airportdemo?autoReconnect=true&useSSL=false&serverTimezone=UTC
 
 - hosts: edge
   tasks:
@@ -68,3 +70,6 @@
         ports:
           - "8080:8080"
         pull: true
+        env:
+            UPSTREAM_WEB: 172.17.177.22
+            UPSTREAM_PORT: 8082
