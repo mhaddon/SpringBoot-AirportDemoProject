@@ -15,6 +15,8 @@
         update_cache: yes
 
 - hosts: backend
+  vars_files:
+    - config.yml
   roles:
     - docker
   tasks:
@@ -23,7 +25,7 @@
       docker_container:
         name: mysqldb
         network_mode: bridge
-        image: danielalarcao/airport-spring-boot-docker_mysql:latest
+        image: "{{ database_image }}"
         restart_policy: on-failure
         pull: true
 
@@ -32,18 +34,26 @@
       docker_container:
         name: airportdemo
         network_mode: bridge
-        image: danielalarcao/airport-spring-boot-docker_webapp:latest
+        image: "{{ server_image }}"
         restart_policy: on-failure
         ports:
-          - "3000:3000"
+          - "{{ server_port }}:{{ server_port }}"
         links:
           - "mysqldb:db"
         pull: true
         env:
-            SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/lunatech?autoReconnect=true&useSSL=false&serverTimezone=UTC
+            SPRING_DATASOURCE_URL: "{{ datasource_url }}"
 
 - hosts: edge
+  vars_files:
+    - config.yml
   roles:
     - docker
-    - proxy
-
+  tasks:
+    - include_role:
+        name: proxy
+      vars:
+        image: "{{ proxy_image }}"
+        upstream_port: "{{ server_port }}"
+        upstream_ip: "172.17.177.22"
+        port: "{{ external_port }}"

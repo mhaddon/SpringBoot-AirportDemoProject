@@ -1,0 +1,6 @@
+server_image: danielalarcao/airport-spring-boot-docker_webapp:latest
+server_port: "3000"
+external_port: "8080"
+database_image: danielalarcao/airport-spring-boot-docker_mysql:latest
+proxy_image: danielalarcao/airport-spring-boot-docker_nginx:latest
+datasource_url: jdbc:mysql://db:3306/lunatech?autoReconnect=true&useSSL=false&serverTimezone=UTC

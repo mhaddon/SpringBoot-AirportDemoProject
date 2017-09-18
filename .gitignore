@@ -52,3 +52,9 @@ lucene_indexes
 .vagrant/
 get-docker.sh
 playbook.retry
+
+#----------------------
+# Ignore Config Files
+#----------------------
+
+VagrantAnsible/config.yml

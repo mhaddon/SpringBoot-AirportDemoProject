@@ -1,0 +1,6 @@
+server_image: mhaddon/airportdemo:latest
+server_port: "8082"
+external_port: "8080"
+database_image: mhaddon/airportdemo_mysqldb:latest
+proxy_image: mhaddon/airportdemo_proxy:latest
+datasource_url: jdbc:mysql://db:3306/airportdemo?autoReconnect=true&useSSL=false&serverTimezone=UTC
