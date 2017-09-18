@@ -1,0 +1,83 @@
+---
+- hosts: all
+  tasks:
+    - name: Update all packages
+      become: true
+      apt:
+        upgrade: dist
+        update_cache: yes
+
+    - name: update cache and install vim
+      become: true
+      apt:
+        name: vim
+        state: latest
+        update_cache: yes
+
+    - name: Install pip
+      become: true
+      apt:
+        name: python-pip
+        state: present
+
+    - name: Install docker-py
+      become: true
+      pip:
+        name: docker-py
+        state: present
+
+    - name: add docker key
+      become: true
+      apt_key:
+        Id: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+        validate_certs: no
+
+    - name: add docker repo
+      become: true
+      apt_repository:
+        name: deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable
+
+    - name: install docker
+      become: true
+      apt:
+        name: docker-ce
+
+
+- hosts: backend
+  tasks:
+    - name: mysqldb
+      become: true
+      docker_container:
+        name: mysqldb
+        network_mode: bridge
+        image: mhaddon/airportdemo_mysqldb:latest
+        restart_policy: on-failure
+        pull: true
+
+    - name: airportdemo
+      become: true
+      docker_container:
+        name: airportdemo
+        network_mode: bridge
+        image: mhaddon/airportdemo:latest
+        restart_policy: on-failure
+        ports:
+          - "8082:8082"
+        links:
+          - "mysqldb:db"
+        pull: true
+
+- hosts: edge
+  tasks:
+    - name: proxy
+      become: true
+      docker_container:
+        name: proxy
+        network_mode: bridge
+        image: mhaddon/airportdemo_proxy:latest
+        restart_policy: on-failure
+        ports:
+          - "8080:8080"
+        pull: true

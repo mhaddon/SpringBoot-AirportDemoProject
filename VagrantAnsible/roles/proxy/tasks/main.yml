@@ -1,0 +1,13 @@
+- name: proxy
+  become: true
+  docker_container:
+    name: proxy
+    network_mode: bridge
+    image: danielalarcao/airport-spring-boot-docker_nginx:latest
+    restart_policy: on-failure
+    ports:
+      - "8080:8080"
+    pull: true
+    env:
+      UPSTREAM_WEB: 172.17.177.22
+      UPSTREAM_PORT: 3000

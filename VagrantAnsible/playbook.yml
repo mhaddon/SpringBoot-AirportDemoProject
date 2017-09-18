@@ -14,32 +14,16 @@
         state: latest
         update_cache: yes
 
-    - name: 'Install pip'
-      become: true
-      apt:
-       name: python-pip
-       state: present
-
-    - name: 'Install docker-py'
-      become: true
-      pip:
-        name: docker-py
-        state: present
-
-    - name: install docker
-      become: true
-      shell: curl -fsSL get.docker.com -o get-docker.sh && chmod +x get-docker.sh && ./get-docker.sh
-      args:
-          creates: get-docker.sh
-
 - hosts: backend
+  roles:
+    - docker
   tasks:
     - name: mysqldb
-      become: true 
+      become: true
       docker_container:
         name: mysqldb
         network_mode: bridge
-        image: mhaddon/airportdemo_mysqldb:latest
+        image: danielalarcao/airport-spring-boot-docker_mysql:latest
         restart_policy: on-failure
         pull: true
 
@@ -48,28 +32,18 @@
       docker_container:
         name: airportdemo
         network_mode: bridge
-        image: mhaddon/airportdemo:latest
+        image: danielalarcao/airport-spring-boot-docker_webapp:latest
         restart_policy: on-failure
         ports:
-          - "8082:8082"
+          - "3000:3000"
         links:
           - "mysqldb:db"
         pull: true
         env:
-            SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/airportdemo?autoReconnect=true&useSSL=false&serverTimezone=UTC
+            SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/lunatech?autoReconnect=true&useSSL=false&serverTimezone=UTC
 
 - hosts: edge
-  tasks:
-    - name: proxy
-      become: true
-      docker_container:
-        name: proxy
-        network_mode: bridge
-        image: mhaddon/airportdemo_proxy:latest
-        restart_policy: on-failure
-        ports:
-          - "8080:8080"
-        pull: true
-        env:
-            UPSTREAM_WEB: 172.17.177.22
-            UPSTREAM_PORT: 8082
+  roles:
+    - docker
+    - proxy
+

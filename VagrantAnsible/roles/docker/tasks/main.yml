@@ -1,0 +1,17 @@
+- name: 'Install pip'
+  become: true
+  apt:
+    name: python-pip
+    state: present
+
+- name: 'Install docker-py'
+  become: true
+  pip:
+    name: docker-py
+    state: present
+
+- name: install docker
+  become: true
+  shell: curl -fsSL get.docker.com -o get-docker.sh && chmod +x get-docker.sh && ./get-docker.sh
+  args:
+    creates: get-docker.sh
