@@ -16,7 +16,9 @@
 
 package com.airportdemo.config;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.Getter;
+import org.codehaus.groovy.runtime.StringGroovyMethods;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -83,6 +85,10 @@ public class DatabaseConfig {
 
     private final String hibernateUseSqlComments;
 
+    private final String hibernateSearchHost;
+    private final String hibernateSearchUsername;
+    private final String hibernateSearchPassword;
+
     @Getter
     private final Boolean useExistingData;
 
@@ -110,7 +116,10 @@ public class DatabaseConfig {
                           @Value("${entitymanager.packagesToScan}") final String entitymanagerPackagesToScan,
                           @Value("${spring.jpa.properties.hibernate.use_sql_comments}") final String hibernateUseSqlComments,
                           @Value("${spring.jpa.properties.hibernate.format_sql}") final String hibernateFormatSql,
-                          @Value("${airportdemo.use_existing_data}") final Boolean useExistingData) {
+                          @Value("${airportdemo.use_existing_data}") final Boolean useExistingData,
+                          @Value("${hibernate.search.default.elasticsearch.host}") final String hibernateSearchHost,
+                          @Value("${hibernate.search.default.elasticsearch.username}") final String hibernateSearchUsername,
+                          @Value("${hibernate.search.default.elasticsearch.password}") final String hibernateSearchPassword) {
         this.dbDriver = dbDriver;
         this.dbPassword = dbPassword;
         this.dbUrl = dbUrl;
@@ -122,6 +131,9 @@ public class DatabaseConfig {
         this.hibernateFormatSql = hibernateFormatSql;
         this.hibernateUseSqlComments = hibernateUseSqlComments;
         this.useExistingData = useExistingData;
+        this.hibernateSearchHost = hibernateSearchHost;
+        this.hibernateSearchUsername = hibernateSearchUsername;
+        this.hibernateSearchPassword = hibernateSearchPassword;
     }
 
     /**
@@ -148,7 +160,7 @@ public class DatabaseConfig {
         em.setPackagesToScan(entitymanagerPackagesToScan);
         em.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
         em.setJpaProperties(hibernateProperties);
-        em.setPersistenceUnitName("airportdemodb");
+        em.setPersistenceUnitName("airportdemo");
         em.setSharedCacheMode(SharedCacheMode.ENABLE_SELECTIVE);
         em.setPersistenceProviderClass(HibernatePersistenceProvider.class);
         em.afterPropertiesSet();
@@ -192,9 +204,19 @@ public class DatabaseConfig {
         properties.put("hibernate.cache.use_second_level_cache", "true");
         properties.put("hibernate.cache.use_query_cache", "true");
 
+        properties.put("hibernate.search.default.indexmanager", "elasticsearch");
+        properties.put("hibernate.search.default.elasticsearch.host", hibernateSearchHost);
+        properties.put("hibernate.search.default.elasticsearch.username", hibernateSearchUsername);
+        properties.put("hibernate.search.default.elasticsearch.password", hibernateSearchPassword);
+        properties.put("hibernate.search.default.elasticsearch.index_schema_management_strategy", "CREATE");
+//        properties.put("hibernate.search.default.elasticsearch.discovery.enabled", "true");
+        properties.put("hibernate.search.default.elasticsearch.required_index_status", "yellow");
 
         properties.put("hibernate.search.default.directory_provider", "filesystem");
         properties.put("hibernate.search.default.indexBase", "./lucene_indexes/");
+
+        properties.put("hibernate.search.default.sourceBase", "./lucene_indexes_master_copy/");
+        properties.put("hibernate.search.default.refresh", "1800");
 
         return properties;
     }

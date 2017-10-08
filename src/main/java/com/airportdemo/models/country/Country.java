@@ -43,7 +43,7 @@ import java.util.Set;
 public class Country extends BaseEntity implements Serializable {
     @Column(name = "code")
     @Fields({
-            @Field(name = "code", index = Index.YES, store = Store.YES,
+            @Field(name = "code.a", index = Index.YES, store = Store.YES,
                     analyze = Analyze.YES, analyzer = @Analyzer(definition = SearchAnalysers.ENGLISH_WORD_ANALYSER), boost = @Boost(2.0f)),
             @Field(name = "code.edge", index = Index.YES, store = Store.NO,
                     analyze = Analyze.YES, analyzer = @Analyzer(definition = SearchAnalysers.EDGE_ANALYSER)),
@@ -54,7 +54,7 @@ public class Country extends BaseEntity implements Serializable {
 
     @Column(name = "name")
     @Fields({
-            @Field(name = "name", index = Index.YES, store = Store.YES,
+            @Field(name = "name.a", index = Index.YES, store = Store.YES,
                     analyze = Analyze.YES, analyzer = @Analyzer(definition = SearchAnalysers.ENGLISH_WORD_ANALYSER), boost = @Boost(2.0f)),
             @Field(name = "name.edge", index = Index.YES, store = Store.NO,
                     analyze = Analyze.YES, analyzer = @Analyzer(definition = SearchAnalysers.EDGE_ANALYSER)),
@@ -77,7 +77,7 @@ public class Country extends BaseEntity implements Serializable {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "country")
     @JsonBackReference(value = "airportToCountry")
-    @ContainedIn
+//    @ContainedIn
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Airport> airports = new HashSet<>(0);
 

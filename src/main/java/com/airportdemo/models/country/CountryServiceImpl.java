@@ -44,7 +44,7 @@ public class CountryServiceImpl implements CountryService {
     @Override
     public Optional<Country> queryCountry(final String queryString) {
         @SuppressWarnings("unchecked") final List<Country> countries = phraseQuery.parse(Country.class, queryString, new String[]{
-                "code", "code.ngram", "code.edge", "name", "name.ngram", "name.edge"
+                "code.a", "code.ngram", "code.edge", "name.a", "name.ngram", "name.edge"
         })
                 .setMaxResults(1)
                 .getResultList();

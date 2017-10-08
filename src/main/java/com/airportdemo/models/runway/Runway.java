@@ -44,7 +44,7 @@ public class Runway extends BaseEntity implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "airport_id")
     @JsonManagedReference(value = "runwayToAirport")
-    @IndexedEmbedded
+//    @IndexedEmbedded
     @JsonProperty("airport")
     private Airport airport;
 
