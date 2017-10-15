@@ -16,9 +16,7 @@
 
 package com.airportdemo.config;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.Getter;
-import org.codehaus.groovy.runtime.StringGroovyMethods;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

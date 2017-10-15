@@ -77,7 +77,7 @@ public class Country extends BaseEntity implements Serializable {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "country")
     @JsonBackReference(value = "airportToCountry")
-//    @ContainedIn
+    @IndexedEmbedded
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Airport> airports = new HashSet<>(0);
 

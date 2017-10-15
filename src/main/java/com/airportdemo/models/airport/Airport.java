@@ -45,7 +45,7 @@ public class Airport extends BaseEntity implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "country_id")
     @JsonManagedReference(value = "airportToCountry")
-//    @IndexedEmbedded
+    @ContainedIn
     @JsonProperty("country")
     private Country country;
 
@@ -115,7 +115,7 @@ public class Airport extends BaseEntity implements Serializable {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "airport")
     @JsonBackReference(value = "runwayToAirport")
-//    @ContainedIn
+    @ContainedIn
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Runway> runways = new HashSet<>(0);
 

@@ -48,6 +48,7 @@ nbdist/
 #----------------------
 
 lucene_indexes
+esdata
 .DS_STORE
 .vagrant/
 get-docker.sh

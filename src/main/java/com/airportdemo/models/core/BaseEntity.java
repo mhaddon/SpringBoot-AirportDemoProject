@@ -95,9 +95,9 @@ import java.util.Optional;
                                 @org.hibernate.search.annotations.Parameter(name = "language", value = "English")
                         }),
                         @TokenFilterDef(factory = ASCIIFoldingFilterFactory.class),
-//                        @TokenFilterDef(factory = PhoneticFilterFactory.class, params = {
-//                                @org.hibernate.search.annotations.Parameter(name = "encoder", value = "DoubleMetaphone")
-//                        }),
+                        @TokenFilterDef(factory = PhoneticFilterFactory.class, params = {
+                                @org.hibernate.search.annotations.Parameter(name = "encoder", value = "DoubleMetaphone")
+                        }),
                         @TokenFilterDef(factory = StopFilterFactory.class, params = {
                                 @org.hibernate.search.annotations.Parameter(name = "words", value = "analyser/stoplist.properties"),
                                 @org.hibernate.search.annotations.Parameter(name = "ignoreCase", value = "true")
